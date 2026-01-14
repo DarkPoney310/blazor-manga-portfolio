@@ -1,0 +1,212 @@
+﻿@using System.Net.Http
+@inject ToastService ToastService
+@inject DownloadService DownloadService
+@inject HttpClient Http
+
+<section class="reveal is-in section-opt pb-3">
+    <div class="manga-panel halftone gpu">
+        <div class="grid gap-8 md:grid-cols-2 items-center">
+
+            <!-- LEFT: Intro -->
+            <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                    @if (!string.IsNullOrWhiteSpace(BadgeText))
+                    {
+                        <span class="stamp anim-stamp">@BadgeText</span>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Location))
+                    {
+                        <span class="text-sm ink-dim">📍 @Location</span>
+                    }
+                </div>
+
+                <h1 class="ink-title text-3xl md:text-5xl mt-4 leading-tight">
+                    @Title
+                </h1>
+
+                @if (!string.IsNullOrWhiteSpace(Subtitle))
+                {
+                    <p class="ink-muted mt-3 text-base md:text-lg max-w-xl">
+                        <span class="brush-underline">@Subtitle</span>
+                    </p>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Description))
+                {
+                    <p class="ink-muted mt-4 text-sm md:text-base max-w-xl">
+                        @Description
+                    </p>
+                }
+
+                <!-- CTAs -->
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <InkLink Href="@PrimaryHref" Class="manga-panel--soft ink-border-soft px-4 py-3 rounded-xl inline-flex items-center gap-2 gpu hover:opacity-90">
+                        <span class="font-extrabold uppercase tracking-wide text-sm">@PrimaryText</span>
+                        <span aria-hidden="true">→</span>
+                    </InkLink>
+
+                    <InkLink Href="@SecondaryHref" Class="manga-panel--soft ink-border-soft px-4 py-3 rounded-xl inline-flex items-center gap-2 gpu hover:opacity-90">
+                        <span class="font-extrabold uppercase tracking-wide text-sm">@SecondaryText</span>
+                        <span aria-hidden="true">✦</span>
+                    </InkLink>
+
+                    @if (!string.IsNullOrWhiteSpace(CvUrl))
+                    {
+                        <Button IsAsync="true"
+                                Icon="fa-solid fa-download"
+                                Text="@CvButtonText"
+                                OnClickWithoutRender="DownloadCvAsync" />
+                    }
+                </div>
+
+                <!-- Optional: text stack badges (si vous voulez en plus des images) -->
+                @if (StacksText?.Count > 0)
+                {
+                    <div class="mt-6 flex flex-wrap gap-2">
+                        @foreach (var s in StacksText)
+                        {
+                            <span class="px-3 py-1 rounded-full border border-[rgba(0,0,0,.18)] text-xs ink-dim">
+                                @s
+                            </span>
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- RIGHT: Animated horizontal stacks -->
+            <div class="grid gap-3">
+                <div class="manga-frame hatch gpu">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <div class="ink-title text-lg md:text-xl">@StacksTitle</div>
+                            @if (!string.IsNullOrWhiteSpace(StacksSubtitle))
+                            {
+                                <div class="ink-muted text-sm mt-1">@StacksSubtitle</div>
+                            }
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(StatusText))
+                        {
+                            <span class="stamp @(StatusIsAccent ? "" : "stamp--ink")">@StatusText</span>
+                        }
+                    </div>
+
+                    @if (StackItems?.Count > 0)
+                    {
+                        <div class="mt-4">
+                            <div class="stack-marquee" aria-label="Stacks">
+                                <div class="stack-track gpu" role="list">
+                                    @* 1ère copie *@
+                                    @foreach (var item in StackItems)
+                                    {
+                                        <div class="stack-chip" role="listitem" title="@item.Name">
+                                            <img class="stack-icon" src="@item.ImageUrl" alt="@item.Name" loading="lazy" />
+                                        </div>
+                                    }
+
+                                    @* 2ème copie (pour boucle infinie) *@
+                                    @foreach (var item in StackItems)
+                                    {
+                                        <div class="stack-chip" role="listitem" title="@item.Name">
+                                            <img class="stack-icon" src="@item.ImageUrl" alt="@item.Name" loading="lazy" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+
+                            <div class="mt-3 flex items-center justify-between">
+                                <span class="text-xs ink-dim">Glissez horizontalement</span>
+                                @if (!string.IsNullOrWhiteSpace(Email))
+                                {
+                                    <a class="text-xs font-extrabold underline decoration-[rgba(0,0,0,.25)] hover:opacity-90"
+                                       href="mailto:@Email">
+                                        @Email
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@code {
+    // ----------- Inputs -----------
+    [Parameter] public string Title { get; set; } = "Votre Nom";
+    [Parameter] public string Subtitle { get; set; } = "Full-stack & Mobile — .NET / Blazor / Flutter / Next.js";
+    [Parameter]
+    public string? Description { get; set; } =
+        "Je construis des applications solides et élégantes, avec une approche DDD/CQRS et une attention particulière à l’UX.";
+
+    [Parameter] public string? BadgeText { get; set; } = "Ink Portfolio";
+    [Parameter] public string? Location { get; set; } = "Québec, Canada";
+
+    [Parameter] public string PrimaryText { get; set; } = "Bibliothèque";
+    [Parameter] public string PrimaryHref { get; set; } = "/library";
+    [Parameter] public string SecondaryText { get; set; } = "Me contacter";
+    [Parameter] public string SecondaryHref { get; set; } = "/contact";
+
+    [Parameter] public string? Email { get; set; } = "you@example.com";
+
+    // CV
+    [Parameter] public string? CvUrl { get; set; } = "/cv/cv-dev.pdf"; // mettez votre PDF dans wwwroot/cv/
+    [Parameter] public string CvFileName { get; set; } = "Isaac-Lawson-CV.pdf";
+    [Parameter] public string CvButtonText { get; set; } = "Download CV";
+
+    // Status badge (optionnel)
+    [Parameter] public string? StatusText { get; set; } = "Stage";
+    [Parameter] public bool StatusIsAccent { get; set; } = true;
+
+    // Stacks (images)
+    public sealed record StackItem(string Name, string ImageUrl);
+
+    [Parameter] public string StacksTitle { get; set; } = "Stacks";
+    [Parameter] public string? StacksSubtitle { get; set; } = "Icônes en encre • scroll fluide";
+
+    [Parameter]
+    public List<StackItem>? StackItems { get; set; } = new()
+    {
+        new("C#", "/img/stacks/csharp.svg"),
+        new(".NET", "/img/stacks/dotnet.svg"),
+        new("Blazor", "/img/stacks/blazor.svg"),
+        new("Flutter", "/img/stacks/flutter.svg"),
+        new("Next.js", "/img/stacks/nextjs.svg"),
+        new("Tailwind", "/img/stacks/tailwind.svg"),
+        new("EF Core", "/img/stacks/efcore.svg"),
+    };
+
+    // Optionnel: badges texte sous le Hero
+    [Parameter] public List<string>? StacksText { get; set; }
+
+    // ----------- C# download (WASM-friendly) -----------
+    private string ResolveCvUrl()
+    {
+        if (string.IsNullOrWhiteSpace(CvUrl))
+            return "/cv/cv-dev.pdf";
+
+        // accepte "/cv/xxx.pdf" ou "cv/xxx.pdf" ou URL absolue
+        if (CvUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+            CvUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            return CvUrl;
+
+        return CvUrl.StartsWith("/") ? CvUrl : "/" + CvUrl;
+    }
+
+    private async Task DownloadCvAsync()
+    {
+        try
+        {
+            var url = ResolveCvUrl();
+            await using var stream = await Http.GetStreamAsync(url);
+            await DownloadService.DownloadFromStreamAsync(CvFileName, stream);
+        }
+        catch (Exception ex)
+        {
+            //await ToastService.Error("Erreur", ex.Message);
+        }
+    }
+}

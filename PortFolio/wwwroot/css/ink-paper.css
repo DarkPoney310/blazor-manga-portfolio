@@ -1,0 +1,522 @@
+﻿/* ============================================================
+   INK / PAPER on WOOD DESK  (Blazor WASM + Tailwind)
+   - Full viewport wood background
+   - Paper fills viewport inside 15px border
+   - No phantom scrollbars (horizontal/vertical)
+   - Smooth GPU animations (transform/opacity)
+============================================================ */
+
+/* -------------------- 1) Tokens -------------------- */
+:root {
+    /* Paper */
+    --paper: #F6F1E7;
+    --paper-2: #EFE7D8;
+    --paper-3: #E6D9C3;
+    /* Ink */
+    --ink: #0B0B0C;
+    --ink-2: rgba(11, 11, 12, 0.78);
+    --ink-3: rgba(11, 11, 12, 0.55);
+    --ink-4: rgba(11, 11, 12, 0.18);
+    /* Accent stamp (optional) */
+    --seal: #B21E1E;
+    /* Desk (wood) */
+    --wood-1: #2a1710;
+    --wood-2: #3a1f14;
+    --wood-3: #4b2818;
+    --wood-4: #1a0f0b;
+    /* Layout */
+    --desk-pad: 15px; /* border all around */
+    --paper-radius: 18px;
+    /* Shadows (paper elevation) */
+    --shadow-paper-1: 0 18px 50px rgba(0,0,0,.38);
+    --shadow-paper-2: 0 8px 18px rgba(0,0,0,.22);
+    --shadow-edge: inset 0 0 0 1px rgba(0,0,0,.10);
+    /* Route transition duration */
+    --wipe-ms: 560ms;
+}
+
+/* -------------------- 2) Anti-scrollbar phantom rules -------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow-x: hidden; /* kills horizontal phantom scrolling */
+}
+
+body {
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optional wrapper */
+.manga-theme {
+    color: var(--ink);
+}
+
+/* Text helpers */
+.ink-text {
+    color: var(--ink);
+}
+
+.ink-muted {
+    color: var(--ink-2);
+}
+
+.ink-dim {
+    color: var(--ink-3);
+}
+
+/* Perf helpers */
+.gpu {
+    transform: translate3d(0,0,0);
+    will-change: transform, opacity;
+}
+
+.section-opt {
+    content-visibility: auto;
+    contain-intrinsic-size: 900px;
+}
+
+/* -------------------- 3) Wood desk background (15px border) -------------------- */
+.desk {
+    min-height: 100vh;
+    padding: var(--desk-pad);
+    position: relative;
+    overflow: hidden;
+    /* critical: flex keeps paper filling without height calc hacks */
+    display: flex;
+    flex-direction: column;
+    background:
+    /* vignette */
+    radial-gradient(1400px 900px at 50% 35%, rgba(255,255,255,.06), transparent 62%), radial-gradient(1200px 800px at 50% 110%, rgba(0,0,0,.55), transparent 60%),
+    /* grain lines */
+    repeating-linear-gradient( 90deg, rgba(255,255,255,.035) 0px, rgba(255,255,255,.035) 1px, transparent 2px, transparent 10px ), repeating-linear-gradient( 90deg, rgba(0,0,0,.08) 0px, rgba(0,0,0,.08) 2px, transparent 3px, transparent 18px ),
+    /* base color */
+    linear-gradient(135deg, var(--wood-1), var(--wood-3));
+}
+
+    .desk::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(900px 520px at 10% 10%, rgba(0,0,0,.35), transparent 60%), radial-gradient(900px 520px at 90% 12%, rgba(0,0,0,.25), transparent 62%), radial-gradient(1000px 700px at 50% 80%, rgba(0,0,0,.35), transparent 68%);
+        opacity: .75;
+    }
+
+.desk__inner {
+    position: relative;
+    z-index: 1;
+    /* paper should stretch */
+    flex: 1;
+    display: flex;
+    /* important for flex overflow quirks */
+    min-height: 0;
+    min-width: 0;
+}
+
+/* -------------------- 4) Paper page (fills inside border) -------------------- */
+.paper-page {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    min-height: 0; /* do NOT force > viewport */
+
+    border-radius: var(--paper-radius);
+    background: var(--paper);
+    overflow: hidden;
+    /* elevation */
+    box-shadow: var(--shadow-paper-1), var(--shadow-paper-2), var(--shadow-edge);
+    padding: 28px;
+    /* prevents tiny subpixel overflows in some browsers */
+    min-width: 0;
+}
+
+    /* Prevent margin-collapse causing weird vertical overflow */
+    .paper-page > :first-child {
+        margin-top: 0;
+    }
+
+    .paper-page > :last-child {
+        margin-bottom: 0;
+    }
+
+    /* Paper fibers + stains */
+    .paper-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(900px 640px at 12% 16%, rgba(0,0,0,.06), transparent 62%), radial-gradient(820px 600px at 88% 84%, rgba(0,0,0,.05), transparent 62%), repeating-linear-gradient( 0deg, rgba(0,0,0,.018) 0px, rgba(0,0,0,.018) 1px, transparent 2px, transparent 7px ), repeating-linear-gradient( 90deg, rgba(0,0,0,.014) 0px, rgba(0,0,0,.014) 1px, transparent 2px, transparent 9px );
+        opacity: .9;
+        mix-blend-mode: multiply;
+    }
+
+    /* Paper edge vignette + wear */
+    .paper-page::after {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        pointer-events: none;
+        background: radial-gradient(1300px 900px at 50% 40%, transparent 58%, rgba(0,0,0,.14) 100%), radial-gradient(700px 380px at 8% 6%, rgba(0,0,0,.08), transparent 60%), radial-gradient(700px 380px at 92% 8%, rgba(0,0,0,.06), transparent 65%);
+        opacity: .55;
+    }
+
+/* Optional micro-grain helper */
+.paper-grain {
+    position: relative;
+}
+
+    .paper-grain::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image: repeating-radial-gradient( circle at 30% 40%, rgba(0,0,0,.028) 0 1px, transparent 1px 3px );
+        opacity: .20;
+        mix-blend-mode: multiply;
+    }
+
+/* -------------------- 5) Ink components -------------------- */
+.manga-panel {
+    position: relative;
+    border-radius: 14px;
+    border: 2px solid var(--ink);
+    background: rgba(255,255,255,.30);
+    padding: 18px;
+}
+
+.manga-panel--soft {
+    border: 1px solid var(--ink-4);
+    background: rgba(255,255,255,.20);
+}
+
+.manga-frame {
+    border: 3px solid var(--ink);
+    border-radius: 18px;
+    background: rgba(255,255,255,.18);
+    padding: 18px;
+}
+
+/* Manga shading */
+.hatch {
+    position: relative;
+    overflow: hidden;
+}
+
+    .hatch::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: repeating-linear-gradient( 135deg, rgba(11,11,12,.10) 0px, rgba(11,11,12,.10) 2px, transparent 2px, transparent 7px );
+        opacity: .38;
+        mix-blend-mode: multiply;
+    }
+
+.halftone {
+    position: relative;
+    overflow: hidden;
+}
+
+    .halftone::before {
+        content: "";
+        position: absolute;
+        inset: -24px;
+        pointer-events: none;
+        background-image: radial-gradient(rgba(11,11,12,.18) 1px, transparent 1.6px);
+        background-size: 10px 10px;
+        opacity: .32;
+        transform: rotate(-8deg);
+        mix-blend-mode: multiply;
+    }
+
+/* Typography ink feel */
+.ink-title {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-shadow: 0 0.6px 0 rgba(0,0,0,.18), 0 1.6px 0 rgba(0,0,0,.10);
+}
+
+.brush-underline {
+    position: relative;
+    display: inline-block;
+}
+
+    .brush-underline::after {
+        content: "";
+        position: absolute;
+        left: -2%;
+        right: -2%;
+        bottom: -0.20em;
+        height: 0.36em;
+        background: rgba(11,11,12,.14);
+        border-radius: 999px;
+        transform: rotate(-1deg);
+    }
+
+/* Stamp */
+.stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 2px solid var(--seal);
+    color: var(--seal);
+    background: rgba(178,30,30,.06);
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+/* Book cover */
+.manga-book {
+    position: relative;
+    border-radius: 18px;
+    border: 3px solid var(--ink);
+    background: rgba(255,255,255,.18);
+    overflow: hidden;
+    transform: translate3d(0,0,0);
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+    transition: transform .34s ease, box-shadow .34s ease;
+    box-shadow: 0 18px 42px rgba(0,0,0,.14);
+}
+
+    .manga-book::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(135deg, rgba(11,11,12,.08), transparent 58%);
+        opacity: .7;
+        mix-blend-mode: multiply;
+    }
+
+    .manga-book::after {
+        content: "";
+        position: absolute;
+        top: -30%;
+        left: -60%;
+        width: 70%;
+        height: 160%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+        transform: rotate(18deg);
+        opacity: 0;
+        transition: opacity .34s ease, transform .34s ease;
+    }
+
+    .manga-book:hover {
+        transform: translate3d(0,-8px,0) rotateY(-8deg) rotateX(2deg);
+        box-shadow: 0 28px 64px rgba(0,0,0,.22);
+    }
+
+        .manga-book:hover::after {
+            opacity: .45;
+            transform: rotate(18deg) translateX(90%);
+        }
+
+/* -------------------- 6) Reveal on scroll -------------------- */
+.reveal {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    transition: opacity .55s ease, transform .55s ease;
+    will-change: opacity, transform;
+}
+
+    .reveal.is-in {
+        opacity: 1;
+        transform: translate3d(0,0,0);
+    }
+
+/* -------------------- 7) Route transition overlay (ink wipe) -------------------- */
+.ink-wipe-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden; /* prevents horizontal scrollbar */
+}
+
+    .ink-wipe-overlay::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -30%;
+        width: 55%;
+        height: 100%;
+        background: var(--ink);
+        opacity: .96;
+        transform: translate3d(-110%,0,0) skewX(-12deg);
+    }
+
+    .ink-wipe-overlay.is-active::before {
+        animation: ink-wipe var(--wipe-ms) ease-in-out forwards;
+    }
+
+@keyframes ink-wipe {
+    0% {
+        transform: translate3d(-110%,0,0) skewX(-12deg);
+    }
+
+    100% {
+        transform: translate3d(110%,0,0) skewX(-12deg);
+    }
+}
+
+/* Optional (if you toggle via JS) */
+.no-scroll {
+    overflow: hidden;
+}
+
+/* -------------------- 8) Stamp pop -------------------- */
+.anim-stamp {
+    animation: stamp-pop .55s ease both;
+}
+
+@keyframes stamp-pop {
+    0% {
+        transform: scale(.92) rotate(-6deg);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.04) rotate(2deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* -------------------- 9) BootstrapBlazor neutralization -------------------- */
+.manga-theme .btn,
+.manga-theme .form-control,
+.manga-theme .modal-content {
+    border-radius: 14px;
+}
+
+/* -------------------- 10) Reduced motion -------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .manga-book, .manga-book:hover, .reveal, .reveal.is-in {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+
+    .ink-wipe-overlay.is-active::before,
+    .anim-stamp {
+        animation: none !important;
+    }
+}
+
+.stack-strip {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 10px 4px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+    .stack-strip::-webkit-scrollbar {
+        display: none;
+    }
+
+.stack-fallback {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: rgba(11,11,12,.75);
+    text-align: center;
+    padding: 0 6px;
+}
+
+/* Auto-scrolling horizontal stacks (infinite loop) */
+.stack-marquee {
+    position: relative;
+    overflow: hidden;
+    padding: 10px 4px;
+    /* nice fade on edges */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+}
+
+/* The moving track: contains 2 identical copies */
+.stack-track {
+    display: flex;
+    gap: 12px;
+    width: max-content;
+    will-change: transform;
+    transform: translate3d(0,0,0);
+    animation: stack-marquee 18s linear infinite;
+}
+
+/* Pause on hover (desktop) */
+.stack-marquee:hover .stack-track {
+    animation-play-state: paused;
+}
+
+/* Animation: move by half of its width (because we duplicated content) */
+@keyframes stack-marquee {
+    from {
+        transform: translate3d(0,0,0);
+    }
+
+    to {
+        transform: translate3d(-50%,0,0);
+    }
+}
+
+/* Chips */
+.stack-chip {
+    flex: 0 0 auto;
+    width: 74px;
+    height: 74px;
+    border-radius: 16px;
+    border: 2px solid rgba(11,11,12,.22);
+    background: rgba(255,255,255,.22);
+    box-shadow: 0 10px 20px rgba(0,0,0,.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate3d(0,0,0);
+    transition: transform .22s ease, opacity .22s ease;
+}
+
+    .stack-chip:hover {
+        transform: translate3d(0,-4px,0) rotate(-1deg);
+        opacity: .95;
+    }
+
+.stack-icon {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    filter: grayscale(1) contrast(1.15);
+    opacity: .95;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .stack-track {
+        animation: none !important;
+    }
+
+    .stack-marquee {
+        overflow-x: auto; /* allow manual scroll instead */
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+}

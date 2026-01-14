@@ -1,0 +1,22 @@
+﻿@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<a href="@Href" class="@Class" @onclick="Go" @onclick:preventDefault="true">
+    @ChildContent
+</a>
+
+@code {
+    private IJSObjectReference? _mod;
+
+    [Parameter, EditorRequired] public string Href { get; set; } = "/";
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private async Task Go()
+    {
+        _mod ??= await JS.InvokeAsync<IJSObjectReference>("import", "./js/ink.js");
+        var ms = await _mod.InvokeAsync<int>("playInkWipe");
+        if (ms > 0) await Task.Delay(ms);
+        Nav.NavigateTo(Href);
+    }
+}
