@@ -54,7 +54,7 @@ public static class BookRepository
         new BookData
         {
             Slug = "tome-02",
-            Title = "GoManga",
+            Title = "Manga Homi",
             Subtitle = "Lecteur Mobile",
             ShelfMeta = "Flutter • Firebase",
             AccentColor = "#2B2E5E",
