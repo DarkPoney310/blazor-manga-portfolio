@@ -196,8 +196,8 @@ public static class BookRepository
             ",
 
             Sfx = "KRAK",
-            Live2d = null,
-            DemoLink = "/live2d/bilibili-22/index.json",
+            Live2d = "/live2d/bilibili-22/index.json",
+            DemoLink = null,
             SourceCodeLink = null,
 
             Stack = new()
