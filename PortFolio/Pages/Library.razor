@@ -1,0 +1,76 @@
+﻿@page "/library"
+@using PortFolio.components
+@using PortFolio.Services
+@using PortFolio.Models
+
+<PageTitle>Bibliothèque</PageTitle>
+
+<SocialIconButtons />
+
+<section class="reveal is-in section-opt manga-panel halftone gpu library-hero">
+    <div class="library-hero__top">
+        <div>
+            <div class="library-hero__meta">
+                <span class="stamp anim-stamp">Bibliothèque</span>
+                <span class="ink-dim library-hero__metaText">Projets • Experiments • Notes</span>
+            </div>
+            <h1 class="ink-title library-hero__title">Mes livres</h1>
+            <p class="ink-muted library-hero__lead">
+                Une étagère de projets : chaque “tome” ouvre une fiche avec stack, rôles et captures.
+            </p>
+        </div>
+
+        <div class="library-hero__actions">
+            <InkLink Href="/" Class="ink-btn ink-btn--ghost gpu">
+                <span class="ink-btn__text">Retour</span>
+                <span aria-hidden="true" class="ink-btn__glyph">←</span>
+            </InkLink>
+        </div>
+    </div>
+</section>
+
+<LibraryShelf Title="Projets"
+              Subtitle="Des applications solides, en mode tome."
+              BadgeText="Shelf 01"
+              Books="@_projects" />
+
+<LibraryShelf Title="Open-source / Démos"
+              Subtitle="Des idées rapides, des POCs, des composants."
+              BadgeText="Shelf 02"
+              Books="@_demos" />
+
+@code {
+    private List<LibraryShelf.BookItem> _projects = new();
+    private List<LibraryShelf.BookItem> _demos = new();
+
+    protected override void OnInitialized()
+    {
+        var allBooks = BookRepository.GetAll();
+
+        // On sépare en deux listes pour l'affichage (logique arbitraire basée sur le slug)
+        // Ceux qui commencent par "tome-" vont dans Projets, le reste dans Démos
+        
+        _projects = allBooks
+            .Where(b => b.Slug.StartsWith("tome-"))
+            .Select(MapToShelfItem)
+            .ToList();
+
+        _demos = allBooks
+            .Where(b => !b.Slug.StartsWith("tome-"))
+            .Select(MapToShelfItem)
+            .ToList();
+    }
+
+    private LibraryShelf.BookItem MapToShelfItem(BookData b)
+    {
+        return new LibraryShelf.BookItem(
+            Title: b.Title,
+            Href: $"/library/{b.Slug}",
+            Meta: b.ShelfMeta,
+            Accent: b.AccentColor,
+            Stamp: b.StampLabel,
+            WidthPx: b.WidthPx,
+            HeightPx: b.HeightPx
+        );
+    }
+}

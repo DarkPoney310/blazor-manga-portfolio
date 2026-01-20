@@ -4,50 +4,50 @@
 @inject HttpClient Http
 
 <section class="reveal is-in section-opt pb-3">
-    <div class="manga-panel halftone gpu">
-        <div class="grid gap-8 md:grid-cols-2 items-center">
+    <div class="hero manga-panel halftone gpu">
+        <div class="hero__grid">
 
             <!-- LEFT: Intro -->
-            <div>
-                <div class="flex items-center gap-2 flex-wrap">
+            <div class="hero__left">
+                <div class="hero__meta">
                     @if (!string.IsNullOrWhiteSpace(BadgeText))
                     {
                         <span class="stamp anim-stamp">@BadgeText</span>
                     }
                     @if (!string.IsNullOrWhiteSpace(Location))
                     {
-                        <span class="text-sm ink-dim">📍 @Location</span>
+                        <span class="hero__location ink-dim">@Location</span>
                     }
                 </div>
 
-                <h1 class="ink-title text-3xl md:text-5xl mt-4 leading-tight">
+                <h1 class="ink-title hero__title">
                     @Title
                 </h1>
 
                 @if (!string.IsNullOrWhiteSpace(Subtitle))
                 {
-                    <p class="ink-muted mt-3 text-base md:text-lg max-w-xl">
+                    <div class="speech-bubble hero__subtitle">
                         <span class="brush-underline">@Subtitle</span>
-                    </p>
+                    </div>
                 }
 
                 @if (!string.IsNullOrWhiteSpace(Description))
                 {
-                    <p class="ink-muted mt-4 text-sm md:text-base max-w-xl">
+                    <p class="ink-muted hero__desc">
                         @Description
                     </p>
                 }
 
                 <!-- CTAs -->
-                <div class="mt-6 flex flex-wrap gap-3">
-                    <InkLink Href="@PrimaryHref" Class="manga-panel--soft ink-border-soft px-4 py-3 rounded-xl inline-flex items-center gap-2 gpu hover:opacity-90">
-                        <span class="font-extrabold uppercase tracking-wide text-sm">@PrimaryText</span>
-                        <span aria-hidden="true">→</span>
+                <div class="hero__ctas">
+                    <InkLink Href="@PrimaryHref" Class="ink-btn ink-btn--solid gpu">
+                        <span class="ink-btn__text">@PrimaryText</span>
+                        <span aria-hidden="true" class="ink-btn__glyph">→</span>
                     </InkLink>
 
-                    <InkLink Href="@SecondaryHref" Class="manga-panel--soft ink-border-soft px-4 py-3 rounded-xl inline-flex items-center gap-2 gpu hover:opacity-90">
-                        <span class="font-extrabold uppercase tracking-wide text-sm">@SecondaryText</span>
-                        <span aria-hidden="true">✦</span>
+                    <InkLink Href="@SecondaryHref" Class="ink-btn ink-btn--ghost gpu">
+                        <span class="ink-btn__text">@SecondaryText</span>
+                        <span aria-hidden="true" class="ink-btn__glyph">✦</span>
                     </InkLink>
 
                     @if (!string.IsNullOrWhiteSpace(CvUrl))
@@ -59,29 +59,26 @@
                     }
                 </div>
 
-                <!-- Optional: text stack badges (si vous voulez en plus des images) -->
                 @if (StacksText?.Count > 0)
                 {
-                    <div class="mt-6 flex flex-wrap gap-2">
+                    <div class="hero__tags" aria-label="Stacks">
                         @foreach (var s in StacksText)
                         {
-                            <span class="px-3 py-1 rounded-full border border-[rgba(0,0,0,.18)] text-xs ink-dim">
-                                @s
-                            </span>
+                            <span class="hero__tag ink-dim">@s</span>
                         }
                     </div>
                 }
             </div>
 
             <!-- RIGHT: Animated horizontal stacks -->
-            <div class="grid gap-3">
-                <div class="manga-frame hatch gpu">
-                    <div class="flex items-start justify-between gap-4">
+            <div class="hero__right">
+                <div class="manga-frame hatch gpu hero__stackFrame">
+                    <div class="hero__stackHeader">
                         <div>
-                            <div class="ink-title text-lg md:text-xl">@StacksTitle</div>
+                            <div class="ink-title hero__stackTitle">@StacksTitle</div>
                             @if (!string.IsNullOrWhiteSpace(StacksSubtitle))
                             {
-                                <div class="ink-muted text-sm mt-1">@StacksSubtitle</div>
+                                <div class="ink-muted hero__stackSub">@StacksSubtitle</div>
                             }
                         </div>
 
@@ -93,34 +90,51 @@
 
                     @if (StackItems?.Count > 0)
                     {
-                        <div class="mt-4">
+                        <div class="hero__stackBody">
                             <div class="stack-marquee" aria-label="Stacks">
-                                <div class="stack-track gpu" role="list">
-                                    @* 1ère copie *@
-                                    @foreach (var item in StackItems)
-                                    {
-                                        <div class="stack-chip" role="listitem" title="@item.Name">
-                                            <img class="stack-icon" src="@item.ImageUrl" alt="@item.Name" loading="lazy" />
-                                        </div>
-                                    }
+                                <div class="stack-track gpu">
+                                    <div class="stack-seq" role="list">
+                                        @for (var i = 0; i < 2; i++)
+                                        {
+                                            @foreach (var item in StackItems)
+                                            {
+                                                <div class="stack-chip" role="listitem" title="@item.Name">
+                                                    <img class="stack-icon" src="@item.ImageUrl" alt="@item.Name" loading="lazy" />
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    
+                                    <div class="stack-seq" role="list">
+                                        @for (var i = 0; i < 2; i++)
+                                        {
+                                            @foreach (var item in StackItems)
+                                            {
+                                                <div class="stack-chip" role="listitem" title="@item.Name">
+                                                    <img class="stack-icon" src="@item.ImageUrl" alt="@item.Name" loading="lazy" />
+                                                </div>
+                                            }
+                                        }
+                                    </div>
 
-                                    @* 2ème copie (pour boucle infinie) *@
-                                    @foreach (var item in StackItems)
-                                    {
-                                        <div class="stack-chip" role="listitem" title="@item.Name">
-                                            <img class="stack-icon" src="@item.ImageUrl" alt="@item.Name" loading="lazy" />
-                                        </div>
-                                    }
+                                    @*<div class="stack-seq stack-seq--clone" aria-hidden="true">
+                                        @for (var i = 0; i < 2; i++)
+                                        {
+                                            @foreach (var item in StackItems)
+                                            {
+                                                <div class="stack-chip" title="@item.Name">
+                                                    <img class="stack-icon" src="@item.ImageUrl" alt="" loading="lazy" />
+                                                </div>
+                                            }
+                                        }
+                                    </div>*@
                                 </div>
                             </div>
 
-
-                            <div class="mt-3 flex items-center justify-between">
-                                <span class="text-xs ink-dim">Glissez horizontalement</span>
+                            <div class="hero__stackFooter">
                                 @if (!string.IsNullOrWhiteSpace(Email))
                                 {
-                                    <a class="text-xs font-extrabold underline decoration-[rgba(0,0,0,.25)] hover:opacity-90"
-                                       href="mailto:@Email">
+                                    <a class="hero__email" href="mailto:@Email">
                                         @Email
                                     </a>
                                 }
@@ -148,9 +162,9 @@
     [Parameter] public string PrimaryText { get; set; } = "Bibliothèque";
     [Parameter] public string PrimaryHref { get; set; } = "/library";
     [Parameter] public string SecondaryText { get; set; } = "Me contacter";
-    [Parameter] public string SecondaryHref { get; set; } = "/contact";
+    [Parameter] public string SecondaryHref { get; set; } = "#contact";
 
-    [Parameter] public string? Email { get; set; } = "you@example.com";
+    [Parameter] public string? Email { get; set; } = "lawsonisaac89@gmail.com";
 
     // CV
     [Parameter] public string? CvUrl { get; set; } = "/cv/cv-dev.pdf"; // mettez votre PDF dans wwwroot/cv/
@@ -165,18 +179,36 @@
     public sealed record StackItem(string Name, string ImageUrl);
 
     [Parameter] public string StacksTitle { get; set; } = "Stacks";
-    [Parameter] public string? StacksSubtitle { get; set; } = "Icônes en encre • scroll fluide";
+    [Parameter] public string? StacksSubtitle { get; set; } = "Les technos ";
 
     [Parameter]
     public List<StackItem>? StackItems { get; set; } = new()
     {
-        new("C#", "/img/stacks/csharp.svg"),
-        new(".NET", "/img/stacks/dotnet.svg"),
-        new("Blazor", "/img/stacks/blazor.svg"),
-        new("Flutter", "/img/stacks/flutter.svg"),
-        new("Next.js", "/img/stacks/nextjs.svg"),
-        new("Tailwind", "/img/stacks/tailwind.svg"),
-        new("EF Core", "/img/stacks/efcore.svg"),
+        new("Visual Studio", "/assets/visualstudio-original.svg"),
+        new("C#", "/assets/csharp-original.svg"),
+        new(".NET", "/assets/dot-net-original.svg"),
+        new(".NET Core", "/assets/dotnetcore-original.svg"),
+        new("EF Core", "/assets/entityframeworkcore-original.svg"),
+        new("Blazor", "/assets/blazor-original.svg"),
+        new("Git", "/assets/git-original.svg"),
+        new("GitHub", "/assets/github-original.svg"),
+        new("GitLab", "/assets/gitlab-original.svg"),
+        new("Next.js", "/assets/nextjs-original.svg"),
+        new("TypeScript", "/assets/typescript-original.svg"),
+        new("JavaScript", "/assets/javascript-original.svg"),
+        new("TailwindCss", "/assets/tailwindcss-original.svg"),
+        new("BootStrap", "/assets/bootstrap-original.svg"),
+        new("Flutter", "/assets/flutter-original.svg"),
+        new("Dart", "/assets/dart-original.svg"),
+        new("Android", "/assets/android-original.svg"),
+        new("Php", "/assets/php-original.svg"),
+        new("Laravel", "/assets/laravel-original.svg"),
+        new("SqlServer", "/assets/microsoftsqlserver-original.svg"),
+        new("MariaDB", "/assets/mariadb-original.svg"),
+        new("MySql", "/assets/mysql-original.svg"),
+        new("PostgreSql", "/assets/postgresql-original.svg"),
+        new("Docker", "/assets/docker-original.svg"),
+        new("Arch Linux", "/assets/archlinux-original.svg"),
     };
 
     // Optionnel: badges texte sous le Hero
@@ -204,7 +236,7 @@
             await using var stream = await Http.GetStreamAsync(url);
             await DownloadService.DownloadFromStreamAsync(CvFileName, stream);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             //await ToastService.Error("Erreur", ex.Message);
         }

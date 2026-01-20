@@ -1,0 +1,50 @@
+﻿@inject IJSRuntime JS
+@inject FullScreenService FullScreenService
+
+<div class="social-icon-buttons">
+    <Stack Justify="Justify" IsRow>
+        <StackItem>
+            <Button ButtonStyle="ButtonStyle.None"
+                    TooltipText="LinkedIn"
+                    Color="Color.None"
+                    IsAsync="true"
+                    OnClickWithoutRender="OpenLinkedInAsync">
+                <i class="fa-brands fa-linkedin social-icon-buttons__icon" aria-hidden="true"></i>
+            </Button>
+        </StackItem>
+        <StackItem>
+            <Button ButtonStyle="ButtonStyle.None"
+                    TooltipText="GitHub"
+                    Color="Color.None"
+                    IsAsync="true"
+                    OnClickWithoutRender="OpenGitHubAsync">
+                <i class="fa-brands fa-github social-icon-buttons__icon" aria-hidden="true"></i>
+            </Button>
+        </StackItem>
+        <StackItem>
+            <Button ButtonStyle="ButtonStyle.None"
+                    TooltipText="Plein écran"
+                    Color="Color.None"
+                    OnClick="() => FullScreenService.Toggle()">
+                <i class="fa-solid fa-compress social-icon-buttons__icon" aria-hidden="true"></i>
+            </Button>
+        </StackItem>
+    </Stack>
+</div>
+
+@code {
+    [Parameter] public string? LinkedInUrl { get; set; }
+    [Parameter] public string? GitHubUrl { get; set; }
+
+    [Parameter] public StackJustifyContent Justify { get; set; } = StackJustifyContent.Start;
+
+    private async Task OpenLinkedInAsync() => await OpenExternalAsync(LinkedInUrl);
+    private async Task OpenGitHubAsync() => await OpenExternalAsync(GitHubUrl);
+
+    private async Task OpenExternalAsync(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return;
+        await JS.InvokeVoidAsync("open", url, "_blank");
+    }
+}
+

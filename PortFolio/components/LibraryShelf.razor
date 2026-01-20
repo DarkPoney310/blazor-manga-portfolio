@@ -1,0 +1,62 @@
+﻿@using PortFolio.components
+
+<section class="reveal section-opt library-shelf manga-panel--soft gpu">
+    <header class="library-shelf__header">
+        <div>
+            <div class="ink-title library-shelf__title">@Title</div>
+            @if (!string.IsNullOrWhiteSpace(Subtitle))
+            {
+                <div class="ink-muted library-shelf__subtitle">@Subtitle</div>
+            }
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(BadgeText))
+        {
+            <span class="stamp anim-stamp">@BadgeText</span>
+        }
+    </header>
+
+    <div class="library-shelf__rowWrap">
+        <div class="library-shelf__row" role="list" aria-label="@Title">
+            @foreach (var b in Books)
+            {
+                <InkLink Href="@b.Href"
+                         Class="library-book"
+                         style="@($"--book-w:{b.WidthPx}px;--book-h:{b.HeightPx}px;--book-accent:{b.Accent};")"
+                         aria-label="@($"{b.Title} — {b.Meta}")">
+                    <div class="library-book__spine halftone">
+                        @if (!string.IsNullOrWhiteSpace(b.Stamp))
+                        {
+                            <span class="library-book__stamp">@b.Stamp</span>
+                        }
+                        <div class="library-book__title">@b.Title</div>
+                        @if (!string.IsNullOrWhiteSpace(b.Meta))
+                        {
+                            <div class="library-book__meta">@b.Meta</div>
+                        }
+                    </div>
+                </InkLink>
+            }
+        </div>
+    </div>
+
+    <div class="library-shelf__plank" aria-hidden="true"></div>
+</section>
+
+@code {
+    public sealed record BookItem(
+        string Title,
+        string Href,
+        string Meta,
+        string Accent,
+        string? Stamp = null,
+        int WidthPx = 72,
+        int HeightPx = 240
+    );
+
+    [Parameter] public string Title { get; set; } = "Bibliothèque";
+    [Parameter] public string? Subtitle { get; set; }
+    [Parameter] public string? BadgeText { get; set; }
+    [Parameter] public IReadOnlyList<BookItem> Books { get; set; } = Array.Empty<BookItem>();
+}
+

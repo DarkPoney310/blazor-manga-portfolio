@@ -1,0 +1,111 @@
+﻿<section id="@Id" class="reveal section-opt manga-panel halftone gpu contact">
+    <div class="ink-title contact__title brush-underline">Me contacter</div>
+    <p class="ink-muted contact__lead">
+        Un projet, une idée, ou juste envie de discuter ? Écris-moi.
+    </p>
+
+    <div class="contact__grid">
+        <div class="manga-frame hatch gpu contact__card">
+            <div class="ink-title contact__cardTitle">Contact direct</div>
+            <div class="ink-muted contact__cardSub">Réponse rapide par email.</div>
+
+            <div class="contact__lines">
+                @if (!string.IsNullOrWhiteSpace(Email))
+                {
+                    <div class="contact__line">
+                        <span class="stamp stamp--ink">EMAIL</span>
+                        <a class="contact__value" href="mailto:@Email">@Email</a>
+                    </div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Location))
+                {
+                    <div class="contact__line">
+                        <span class="stamp stamp--ink">LOCALISATION</span>
+                        <span class="contact__value ink-dim">@Location</span>
+                    </div>
+                }
+            </div>
+
+            <div class="contact__actions">
+                @if (!string.IsNullOrWhiteSpace(Email))
+                {
+                    <a class="ink-btn ink-btn--solid gpu" href="mailto:@Email?subject=@Uri.EscapeDataString(EmailSubject)&body=@Uri.EscapeDataString(EmailBody)">
+                        <span class="ink-btn__text">@PrimaryCtaText</span>
+                        <span aria-hidden="true" class="ink-btn__glyph">✉</span>
+                    </a>
+                }
+                @if (!string.IsNullOrWhiteSpace(GitHubUrl))
+                {
+                    <a class="ink-btn ink-btn--ghost gpu" href="@GitHubUrl" target="_blank" rel="noopener noreferrer">
+                        <span class="ink-btn__text">GitHub</span>
+                        <span aria-hidden="true" class="ink-btn__glyph">↗</span>
+                    </a>
+                }
+                @if (!string.IsNullOrWhiteSpace(LinkedInUrl))
+                {
+                    <a class="ink-btn ink-btn--ghost gpu" href="@LinkedInUrl" target="_blank" rel="noopener noreferrer">
+                        <span class="ink-btn__text">LinkedIn</span>
+                        <span aria-hidden="true" class="ink-btn__glyph">↗</span>
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="manga-frame hatch gpu contact__card">
+            <div class="ink-title contact__cardTitle">Message</div>
+            <div class="ink-muted contact__cardSub">Ouvre un email pré-rempli.</div>
+
+            <div class="contact__form">
+                <label class="contact__label" for="contact_name">Nom</label>
+                <input id="contact_name" class="contact__input" @bind="Name" @bind:event="oninput" placeholder="Ton nom" />
+
+                <label class="contact__label contact__label--spaced" for="contact_subject">Sujet</label>
+                <input id="contact_subject" class="contact__input" @bind="Subject" @bind:event="oninput" placeholder="Ex: Collaboration / Freelance" />
+
+                <label class="contact__label contact__label--spaced" for="contact_message">Message</label>
+                <textarea id="contact_message" class="contact__textarea" @bind="Message" @bind:event="oninput" rows="5" placeholder="Décris ton besoin…"></textarea>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Email))
+            {
+                <div class="contact__actions">
+                    <a class="ink-btn ink-btn--solid gpu" href="@BuildMailTo()">
+                        <span class="ink-btn__text">Envoyer</span>
+                        <span aria-hidden="true" class="ink-btn__glyph">→</span>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter] public string Id { get; set; } = "contact";
+    [Parameter] public string? Email { get; set; }
+    [Parameter] public string? Location { get; set; }
+    [Parameter] public string? GitHubUrl { get; set; }
+    [Parameter] public string? LinkedInUrl { get; set; }
+
+    [Parameter] public string PrimaryCtaText { get; set; } = "M’écrire";
+
+    [Parameter] public string EmailSubject { get; set; } = "Contact via Portfolio";
+    [Parameter] public string EmailBody { get; set; } =
+        "Salut Isaac,\n\nJ’aimerais discuter de...\n\n—";
+
+    private string Name { get; set; } = "";
+    private string Subject { get; set; } = "";
+    private string Message { get; set; } = "";
+
+    private string BuildMailTo()
+    {
+        if (string.IsNullOrWhiteSpace(Email))
+            return "#";
+
+        var subject = string.IsNullOrWhiteSpace(Subject) ? EmailSubject : Subject;
+        var prefix = string.IsNullOrWhiteSpace(Name) ? "" : $"Nom: {Name}\n\n";
+        var body = prefix + (string.IsNullOrWhiteSpace(Message) ? EmailBody : Message);
+
+        return $"mailto:{Email}?subject={Uri.EscapeDataString(subject)}&body={Uri.EscapeDataString(body)}";
+    }
+}

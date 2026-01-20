@@ -1,69 +1,64 @@
 ﻿@page "/"
 @using PortFolio.components
 @inject IJSRuntime JS
-@inject FullScreenService FullScreenService
-
 
 <PageTitle>Portfolio</PageTitle>
 
-
-<Stack Justify="StackJustifyContent.Start" IsRow  >
-    <StackItem>
-        <Button ButtonStyle="ButtonStyle.None" TooltipText="GitHub" Color="Color.None">
-            <i class="fa-brands fa-linkedin" style="font-size:25px"></i>
-        </Button>
-    </StackItem>
-    <StackItem>
-        <Button ButtonStyle="ButtonStyle.None" TooltipText="Linkedin" Color="Color.None">
-            <i class="fa-brands fa-github" style="font-size:25px"></i>
-        </Button>
-    </StackItem>
-    <StackItem>
-        <Button ButtonStyle="ButtonStyle.None" TooltipText="Fullscreen" Color="Color.None" OnClick="() => FullScreenService.Toggle()">
-            <i class="fa-solid fa-compress" style="font-size:25px"></i>
-        </Button>
-    </StackItem>
-</Stack>
+<SocialIconButtons />
 
 <HeroSection Title="ISAAC L. LAWSON ATTIOGBE"
              Subtitle="Full-stack & Mobile Developer — .NET / Blazor / Flutter / Next.js"
              Location="Québec, Canada"
              Email="lawsomisaac89@gmail.com"
-             PrimaryHref="/library"
-             SecondaryHref="/contact" />
+             PrimaryHref="#library"
+             SecondaryHref="#contact" />
 
-@* <section class="reveal section-opt manga-panel">
-    <h1 class="ink-title text-3xl brush-underline">Votre Hero</h1>
-    <p class="ink-muted mt-2">...</p>
-</section> *@
+<LibrarySection Id="library" />
 
-<section class="reveal section-opt mt-6 manga-panel">
-    <InkLink Href="/library/tome-01" Class="manga-book halftone block p-5 gpu">
-      <div class="flex items-start justify-between">
-        <div class="stamp anim-stamp">Tome 01</div>
-        <div class="text-sm ink-dim">Private</div>
-      </div>
+<ContactSection Id="contact"
+                Email="lawsomisaac89@gmail.com"
+                Location="Québec, Canada" />
 
-      <div class="mt-4">
-        <div class="ink-title text-2xl">E-Collecte</div>
-        <div class="ink-muted mt-1">.NET • Blazor • EF Core</div>
-      </div>
+<Live2DDisplay Source="/live2d/bilibili-22/index.json"
+               Scale="0.25"
+               IsDraggable="true"
+               Position="LivePosition.BottomRight"
+               AddHitAreaFrames="false"
+               XOffset="20"
+               YOffset="20"
+               BackgroundAlpha="false"
+/>
 
-      <div class="mt-4 flex gap-2 flex-wrap ink-dim text-xs">
-        <span class="manga-panel--soft px-2 py-1 rounded-full border border-[rgba(0,0,0,.18)]">CQRS</span>
-        <span class="manga-panel--soft px-2 py-1 rounded-full border border-[rgba(0,0,0,.18)]">DDD</span>
-        <span class="manga-panel--soft px-2 py-1 rounded-full border border-[rgba(0,0,0,.18)]">JWT</span>
-      </div>
-    </InkLink>
-</section>
+
+@*<MouseFollower Content="Hi"
+               Options="@FollowerOptions"
+               FollowerMode="MouseFollowerMode.Text"
+               >
+    <Live2DDisplay Source="/live2d/bilibili-22/index.json"
+                   Scale="0.18"
+                   IsDraggable="true"
+                   Position="LivePosition.BottomRight"
+                   AddHitAreaFrames="false"
+                   XOffset="15"
+                   YOffset="15"
+                   BackgroundAlpha="false"
+                   Style="z-index: -1"
+    />
+</MouseFollower>*@
 
 @code {
     private IJSObjectReference? _mod;
+    
+    private readonly MouseFollowerOptions FollowerOptions = new() { ClassName = "mf-cursor bb-cursor" };
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
         _mod = await JS.InvokeAsync<IJSObjectReference>("import", "./js/ink.js");
         await _mod.InvokeVoidAsync("observeReveals");
+        await _mod.InvokeVoidAsync("initStackMarquees");
     }
+
+
+
 }

@@ -1,0 +1,77 @@
+@using PortFolio.components
+
+<section id="@Id" class="reveal section-opt mt-10 mb-6">
+    <div class="manga-panel halftone gpu">
+        <div class="mb-8 pl-2">
+            <span class="stamp anim-stamp">Bibliothèque</span>
+            <h2 class="ink-title text-3xl mt-2">Mes livres</h2>
+            <p class="ink-muted mt-2 max-w-2xl">
+                Tous mes projets et expérimentations. Cliquez sur un tome pour l'ouvrir.
+            </p>
+        </div>
+
+        <LibraryShelf Title="Projets"
+                      Subtitle="Des applications solides, en mode tome."
+                      BadgeText="Shelf 01"
+                      Books="@_projects" />
+
+        <div class="mt-8">
+            <LibraryShelf Title="Démos"
+                          Subtitle="Des idées rapides"
+                          BadgeText="Shelf 02"
+                          Books="@_demos" />
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter] public string Id { get; set; } = "library";
+
+    private readonly IReadOnlyList<LibraryShelf.BookItem> _projects = new[]
+    {
+        new LibraryShelf.BookItem(
+            Title: "Charm",
+            Href: "/library/tome-01",
+            Meta: "Php • Laravel • REST API",
+            Accent: "#0B0B0C",
+            Stamp: "TOME 01",
+            WidthPx: 78,
+            HeightPx: 252),
+        new LibraryShelf.BookItem(
+            Title: "Gestion-Dechet",
+            Href: "/library/tome-02",
+            Meta: "Php • Laravel • REST API",
+            Accent: "#2B2E5E",
+            Stamp: "TOME 02",
+            WidthPx: 78,
+            HeightPx: 252),
+        new LibraryShelf.BookItem(
+            Title: "E-Collecte",
+            Href: "/library/tome-03",
+            Meta: "ASP.NET • C# • WebApi • EF Core",
+            Accent: "#1D4D3A",
+            Stamp: "TOME 03",
+            WidthPx: 78,
+            HeightPx: 252),
+    };
+
+    private readonly IReadOnlyList<LibraryShelf.BookItem> _demos = new[]
+    {
+        new LibraryShelf.BookItem(
+            Title: "Equi-Assiette",
+            Href: "/library/equi-assiette",
+            Meta: "TailwinCss • NextJs • Animations • AI",
+            Accent: "#4A2A18",
+            Stamp: "DEMO",
+            WidthPx: 78,
+            HeightPx: 252),
+        new LibraryShelf.BookItem(
+            Title: "Elaud-Coiffure",
+            Href: "/library/elaude-coiffure",
+            Meta: "TailwindCss • NextJs • UX",
+            Accent: "#0B0B0C",
+            Stamp: "demo",
+            WidthPx: 78,
+            HeightPx: 252),
+    };
+}

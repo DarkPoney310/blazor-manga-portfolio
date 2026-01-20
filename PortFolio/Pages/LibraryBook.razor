@@ -1,0 +1,157 @@
+@page "/library/{Slug}"
+@using PortFolio.components
+@using PortFolio.Services
+@using PortFolio.Models
+@inject NavigationManager Nav
+
+<PageTitle>@(_book?.Title ?? "Livre introuvable")</PageTitle>
+
+@if (_book == null)
+{
+    <div class="p-8 text-center">
+        <p class="ink-title text-xl">Livre introuvable...</p>
+        <InkLink Href="/" Class="ink-btn ink-btn--ghost mt-4">Retour à la bibliothèque</InkLink>
+    </div>
+}
+else
+{
+    <div class="mb-6 pb-3">
+        <InkLink Href="/" Class="ink-btn ink-btn--ghost gpu text-xs">
+            <span aria-hidden="true" class="ink-btn__glyph">←</span>
+            <span class="ink-btn__text">Retour à la bibliothèque</span>
+        </InkLink>
+    </div>
+
+    <div class="open-book reveal is-in section-opt">
+        <div class="book-shell">
+            <div class="book-spread gpu">
+            
+            <!-- ================= PAGE GAUCHE ================= -->
+            <div class="book-leaf book-left">
+                <div class="folio">
+                    <div class="folio__left">
+                        <div class="folio__stamp">
+                            <span class="stamp anim-stamp">@_book.StampLabel</span>
+                            <span class="ink-dim text-xs font-black uppercase tracking-wide">@_book.Slug</span>
+                        </div>
+
+                        <div class="folio__title">
+                            <h1 class="ink-title text-4xl leading-none">@_book.Title</h1>
+                            <p class="folio__subtitle">@_book.DescriptionTitle</p>
+                        </div>
+
+                        <div class="folio__meta">
+                            <div class="folio-card">
+                                <div class="folio-card__label">Rôle</div>
+                                <div class="folio-card__value">@_book.Role</div>
+                            </div>
+                            <div class="folio-card">
+                                <div class="folio-card__label">Contexte</div>
+                                <div class="folio-card__value">@_book.Context</div>
+                            </div>
+                            <div class="folio-card">
+                                <div class="folio-card__label">Année</div>
+                                <div class="folio-card__value">@_book.Year</div>
+                            </div>
+                            <div class="folio-card">
+                                <div class="folio-card__label">Durée</div>
+                                <div class="folio-card__value">@_book.Duration</div>
+                            </div>
+                        </div>
+
+                        <div class="folio__stack">
+                            <div class="folio-section-head">
+                                <div class="ink-title text-lg">Stack</div>
+                                <div class="ink-dim text-xs font-black uppercase tracking-wide">Usage</div>
+                            </div>
+                            <div class="folio-stack-grid">
+                                @foreach (var item in _book.Stack)
+                                {
+                                    <div class="folio-stack-card">
+                                        <div class="folio-stack-head">
+                                            <img src="@item.IconSrc" class="folio-stack-icon" alt="@item.Name" />
+                                            <div class="folio-stack-name">@item.Name</div>
+                                        </div>
+                                        <div class="folio-stack-note">@item.UsedFor</div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RELIURE CENTRALE -->
+            <div class="book-gutter"></div>
+
+            <!-- ================= PAGE DROITE ================= -->
+            <div class="book-leaf book-right">
+                <div class="folio folio--right">
+                    <div class="folio__narration">
+                        <div class="folio-section-head">
+                            <div class="ink-title text-lg">Narration</div>
+                            <div class="ink-dim text-xs font-black uppercase tracking-wide">histoire</div>
+                        </div>
+                        <div class="folio-body">
+                            @((MarkupString)_book.NarrationHtml)
+                        </div>
+                        <div class="folio-section-head mt-2">
+                            <div class="ink-title text-lg">Contribution</div>
+                            <div class="ink-dim text-xs font-black uppercase tracking-wide">rôle & livrables</div>
+                        </div>
+                        @if (_book.Contributions.Count == 0)
+                        {
+                            <div class="ink-dim text-sm font-bold">Contributions à venir.</div>
+                        }
+                        else
+                        {
+                            <ul class="folio-bullets">
+                                @foreach (var bullet in _book.Contributions)
+                                {
+                                    <li>@bullet</li>
+                                }
+                            </ul>
+                        }
+                    </div>
+
+                    <div class="folio__actions">
+                        <div class="folio-section-head">
+                            <div class="ink-title text-lg">Explorer</div>
+                            <div class="ink-dim text-xs font-black uppercase tracking-wide">liens</div>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            @if (!string.IsNullOrEmpty(_book.DemoLink))
+                            {
+                                <a href="@_book.DemoLink" target="_blank" class="ink-btn ink-btn--solid gpu text-xs">
+                                    <span class="ink-btn__text">Voir le site</span>
+                                    <span aria-hidden="true" class="ink-btn__glyph">→</span>
+                                </a>
+                            }
+                            
+                            @if (!string.IsNullOrEmpty(_book.SourceCodeLink))
+                            {
+                                <a href="@_book.SourceCodeLink" target="_blank" class="ink-btn ink-btn--ghost gpu text-xs">
+                                    <span class="ink-btn__text">Code Source</span>
+                                    <span aria-hidden="true" class="ink-btn__glyph"><i class="fa-brands fa-github"></i></span>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Slug { get; set; } = "";
+
+    private BookData? _book;
+
+    protected override void OnInitialized()
+    {
+        _book = BookRepository.GetBySlug(Slug);
+    }
+}

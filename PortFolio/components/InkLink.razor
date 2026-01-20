@@ -1,7 +1,7 @@
 ﻿@inject NavigationManager Nav
 @inject IJSRuntime JS
 
-<a href="@Href" class="@Class" @onclick="Go" @onclick:preventDefault="true">
+<a href="@Href" class="@Class" @attributes="AdditionalAttributes" @onclick="Go" @onclick:preventDefault="true">
     @ChildContent
 </a>
 
@@ -12,10 +12,25 @@
     [Parameter] public string? Class { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+
     private async Task Go()
     {
         _mod ??= await JS.InvokeAsync<IJSObjectReference>("import", "./js/ink.js");
         var ms = await _mod.InvokeAsync<int>("playInkWipe");
+
+        // In-page navigation (keeps ink-wipe "page transition" feeling)
+        if (!string.IsNullOrWhiteSpace(Href) && Href.StartsWith("#", StringComparison.Ordinal))
+        {
+            var id = Href.TrimStart('#');
+            // Let the wipe start so the jump feels like a real navigation.
+            if (ms > 0) await Task.Delay(Math.Min(ms / 3, 220));
+            Nav.NavigateTo(Href);
+            await _mod.InvokeVoidAsync("scrollToId", id);
+            return;
+        }
+
         if (ms > 0) await Task.Delay(ms);
         Nav.NavigateTo(Href);
     }

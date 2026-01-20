@@ -1,0 +1,1 @@
+{"awssdk.core":[{"url":"https://github.com/advisories/GHSA-9cvc-h2w8-phrp","severity":0,"versions":"[4.0.0, 4.0.3.3)"}],"umbracoforms":[{"url":"https://github.com/advisories/GHSA-vrgw-pc9c-qrrc","severity":3,"versions":"(, 8.13.16]"}]}

@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@implements IDisposable
+@inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <BootstrapBlazorRoot>
     <div id="inkWipe" class="ink-wipe-overlay"></div>
@@ -11,3 +14,51 @@
         </main>
     </div>
 </BootstrapBlazorRoot>
+
+@code {
+    private IJSObjectReference? _mod;
+    private bool _wired;
+
+    protected override void OnInitialized()
+    {
+        if (_wired) return;
+        _wired = true;
+        Nav.LocationChanged += OnLocationChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        _mod = await JS.InvokeAsync<IJSObjectReference>("import", "./js/ink.js");
+        await RefreshInkUiAsync();
+    }
+
+    private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        try
+        {
+            await InvokeAsync(async () =>
+            {
+                _mod ??= await JS.InvokeAsync<IJSObjectReference>("import", "./js/ink.js");
+                await Task.Delay(50);
+                await RefreshInkUiAsync();
+            });
+        }
+        catch
+        {
+            // ignore navigation-time JS errors
+        }
+    }
+
+    private async Task RefreshInkUiAsync()
+    {
+        if (_mod is null) return;
+        await _mod.InvokeVoidAsync("observeReveals");
+        await _mod.InvokeVoidAsync("initStackMarquees");
+    }
+
+    public void Dispose()
+    {
+        Nav.LocationChanged -= OnLocationChanged;
+    }
+}
