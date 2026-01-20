@@ -24,19 +24,21 @@
                     @Title
                 </h1>
 
-                @if (!string.IsNullOrWhiteSpace(Subtitle))
-                {
-                    <div class="speech-bubble hero__subtitle">
-                        <span class="brush-underline">@Subtitle</span>
-                    </div>
-                }
+                <!-- Nouveau style: Cartouche Narratif -->
+                <div class="hero__intro-box">
+                    <div class="hero__intro-label">Profil</div>
+                    @if (!string.IsNullOrWhiteSpace(Subtitle))
+                    {
+                        <div class="hero__subtitle">@Subtitle</div>
+                    }
 
-                @if (!string.IsNullOrWhiteSpace(Description))
-                {
-                    <p class="ink-muted hero__desc">
-                        @Description
-                    </p>
-                }
+                    @if (!string.IsNullOrWhiteSpace(Description))
+                    {
+                        <p class="hero__desc">
+                            @Description
+                        </p>
+                    }
+                </div>
 
                 <!-- CTAs -->
                 <div class="hero__ctas">
@@ -154,7 +156,7 @@
     [Parameter] public string Subtitle { get; set; } = "Full-stack & Mobile — .NET / Blazor / Flutter / Next.js";
     [Parameter]
     public string? Description { get; set; } =
-        "Je construis des applications solides et élégantes, avec une approche DDD/CQRS et une attention particulière à l’UX.";
+        "Développeur orienté Backend, passionné par la conception d'architectures robustes et de systèmes scalables. Mon expertise réside dans la transformation de domaines métiers complexes en infrastructures logicielles performantes, fiables et maintenables.";
 
     [Parameter] public string? BadgeText { get; set; } = "Ink Portfolio";
     [Parameter] public string? Location { get; set; } = "Québec, Canada";

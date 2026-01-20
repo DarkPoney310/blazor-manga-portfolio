@@ -72,7 +72,7 @@ else
                                             <img src="@item.IconSrc" class="folio-stack-icon" alt="@item.Name" />
                                             <div class="folio-stack-name">@item.Name</div>
                                         </div>
-                                        <div class="folio-stack-note">@item.UsedFor</div>
+                                        <div class="folio-stack-note tech-context">@item.UsedFor</div>
                                     </div>
                                 }
                             </div>
@@ -86,6 +86,19 @@ else
 
             <!-- ================= PAGE DROITE ================= -->
             <div class="book-leaf book-right">
+                
+                @if (_book.KeyMetrics.Count > 0)
+                {
+                    <div class="absolute top-0 right-0 p-6 pointer-events-none hidden md:block">
+                        @foreach (var (metric, index) in _book.KeyMetrics.Select((m, i) => (m, i)))
+                        {
+                            <div class="post-it" style="@($"top: {10 + (index * 90)}px; right: {20 + (index % 2 * 10)}px; transform: rotate({(index % 2 == 0 ? -2 : 3)}deg);")">
+                                @metric
+                            </div>
+                        }
+                    </div>
+                }
+
                 <div class="folio folio--right">
                     <div class="folio__narration">
                         <div class="folio-section-head">
@@ -137,21 +150,69 @@ else
                             }
                         </div>
                     </div>
+
+                    <!-- Navigation Suivant / Précédent -->
+                    <div class="book-nav">
+                        @if (_prev != null)
+                        {
+                            <a href="/library/@_prev.Slug" class="book-nav__link">
+                                <span class="ink-btn__glyph">←</span>
+                                <div>
+                                    <span class="book-nav__label">Précédent</span>
+                                    @_prev.Title
+                                </div>
+                            </a>
+                        }
+                        else
+                        {
+                            <div></div>
+                        }
+
+                        @if (_next != null)
+                        {
+                            <a href="/library/@_next.Slug" class="book-nav__link text-right">
+                                <div>
+                                    <span class="book-nav__label">Suivant</span>
+                                    @_next.Title
+                                </div>
+                                <span class="ink-btn__glyph">→</span>
+                            </a>
+                        }
+                    </div>
                 </div>
             </div>
 
             </div>
         </div>
     </div>
+
+    @if (!string.IsNullOrEmpty(_book.Live2d)) 
+    {
+        <Live2DDisplay Source="@_book.Live2d"
+                       Scale="0.15"
+                       IsDraggable="true"
+                       Position="LivePosition.BottomLeft"
+                       AddHitAreaFrames="false"
+                       XOffset="10"
+                       YOffset="10"
+                       BackgroundAlpha="false" />
+    }
 }
 
 @code {
     [Parameter] public string Slug { get; set; } = "";
 
     private BookData? _book;
+    private BookData? _next;
+    private BookData? _prev;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
         _book = BookRepository.GetBySlug(Slug);
+        if (_book != null)
+        {
+            _next = BookRepository.GetNext(Slug);
+            _prev = BookRepository.GetPrevious(Slug);
+        }
     }
 }

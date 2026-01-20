@@ -40,6 +40,9 @@ public class BookData
     // Liste technique
     public List<StackItem> Stack { get; set; } = new();
 
+    // Chiffres clés / KPIs (Post-its)
+    public List<string> KeyMetrics { get; set; } = new();
+
     // Contenu pro (page détail)
     public List<string> Contributions { get; set; } = new();
 }
