@@ -20,18 +20,31 @@
         _mod ??= await JS.InvokeAsync<IJSObjectReference>("import", "./js/ink.js");
         var ms = await _mod.InvokeAsync<int>("playInkWipe");
 
-        // In-page navigation (keeps ink-wipe "page transition" feeling)
+        // In-page anchor only (e.g. #contact)
         if (!string.IsNullOrWhiteSpace(Href) && Href.StartsWith("#", StringComparison.Ordinal))
         {
             var id = Href.TrimStart('#');
-            // Let the wipe start so the jump feels like a real navigation.
             if (ms > 0) await Task.Delay(Math.Min(ms / 3, 220));
             Nav.NavigateTo(Href);
             await _mod.InvokeVoidAsync("scrollToId", id);
             return;
         }
 
+        // Path with fragment (e.g. /#library)
+        var fragmentIndex = Href?.IndexOf('#') ?? -1;
+        if (fragmentIndex > 0)
+        {
+            var path = Href![..fragmentIndex];
+            var fragment = Href[(fragmentIndex + 1)..];
+            if (ms > 0) await Task.Delay(ms);
+            Nav.NavigateTo(path);
+            // Wait for page to render before scrolling
+            await Task.Delay(120);
+            await _mod.InvokeVoidAsync("scrollToId", fragment);
+            return;
+        }
+
         if (ms > 0) await Task.Delay(ms);
-        Nav.NavigateTo(Href);
+        Nav.NavigateTo(Href ?? "/");
     }
 }

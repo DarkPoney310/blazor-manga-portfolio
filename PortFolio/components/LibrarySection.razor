@@ -38,15 +38,14 @@
     protected override void OnInitialized()
     {
         var allBooks = BookRepository.GetAll();
-        var demoSlugs = new[] { "equi-assiette-hackathon", "elaud-coiffure", "ink-ui" };
 
-        _demos = allBooks
-            .Where(b => demoSlugs.Contains(b.Slug))
+        _projects = allBooks
+            .Where(b => b.Category == "projet")
             .Select(MapToBookItem)
             .ToList();
 
-        _projects = allBooks
-            .Where(b => !demoSlugs.Contains(b.Slug))
+        _demos = allBooks
+            .Where(b => b.Category == "demo")
             .Select(MapToBookItem)
             .ToList();
     }

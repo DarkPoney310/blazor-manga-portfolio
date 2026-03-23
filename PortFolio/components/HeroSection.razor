@@ -100,8 +100,9 @@
                                         {
                                             @foreach (var item in StackItems)
                                             {
-                                                <div class="stack-chip" role="listitem" title="@item.Name">
+                                                <div class="stack-chip" role="listitem">
                                                     <img class="stack-icon" src="@item.ImageUrl" alt="@item.Name" loading="lazy" />
+                                                    <span class="stack-chip__name">@item.Name</span>
                                                 </div>
                                             }
                                         }
@@ -112,24 +113,14 @@
                                         {
                                             @foreach (var item in StackItems)
                                             {
-                                                <div class="stack-chip" role="listitem" title="@item.Name">
+                                                <div class="stack-chip" role="listitem">
                                                     <img class="stack-icon" src="@item.ImageUrl" alt="@item.Name" loading="lazy" />
+                                                    <span class="stack-chip__name">@item.Name</span>
                                                 </div>
                                             }
                                         }
                                     </div>
 
-                                    @*<div class="stack-seq stack-seq--clone" aria-hidden="true">
-                                        @for (var i = 0; i < 2; i++)
-                                        {
-                                            @foreach (var item in StackItems)
-                                            {
-                                                <div class="stack-chip" title="@item.Name">
-                                                    <img class="stack-icon" src="@item.ImageUrl" alt="" loading="lazy" />
-                                                </div>
-                                            }
-                                        }
-                                    </div>*@
                                 </div>
                             </div>
 
@@ -161,8 +152,8 @@
     [Parameter] public string? BadgeText { get; set; } = "Ink Portfolio";
     [Parameter] public string? Location { get; set; } = "Québec, Canada";
 
-    [Parameter] public string PrimaryText { get; set; } = "Bibliothèque";
-    [Parameter] public string PrimaryHref { get; set; } = "/library";
+    [Parameter] public string PrimaryText { get; set; } = "À propos";
+    [Parameter] public string PrimaryHref { get; set; } = "#about";
     [Parameter] public string SecondaryText { get; set; } = "Me contacter";
     [Parameter] public string SecondaryHref { get; set; } = "#contact";
 
@@ -174,7 +165,7 @@
     [Parameter] public string CvButtonText { get; set; } = "Download CV";
 
     // Status badge (optionnel)
-    [Parameter] public string? StatusText { get; set; } = "Stage";
+    [Parameter] public string? StatusText { get; set; } = "Open to Work";
     [Parameter] public bool StatusIsAccent { get; set; } = true;
 
     // Stacks (images)
@@ -210,6 +201,8 @@
         new("MySql", "/assets/mysql-original.svg"),
         new("PostgreSql", "/assets/postgresql-original.svg"),
         new("Docker", "/assets/docker-original.svg"),
+        new("Python", "/assets/python-original.svg"),
+        new("Java", "/assets/java-original.svg"),
         new("Arch Linux", "/assets/archlinux-original.svg"),
     };
 

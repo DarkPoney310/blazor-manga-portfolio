@@ -14,6 +14,9 @@ public class BookData
     public string AccentColor { get; set; } = "#0B0B0C";
     public string StampLabel { get; set; } = "TOME"; // ex: "TOME 01"
 
+    // Catégorie pour le filtrage (projet vs démo)
+    public string Category { get; set; } = "projet"; // "projet" ou "demo"
+
     // Dimensions visuelles pour l'étagère
     public int WidthPx { get; set; } = 72;
     public int HeightPx { get; set; } = 240;

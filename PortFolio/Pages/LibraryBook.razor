@@ -10,183 +10,198 @@
 {
     <div class="p-8 text-center">
         <p class="ink-title text-xl">Livre introuvable...</p>
-        <InkLink Href="/" Class="ink-btn ink-btn--ghost mt-4">Retour à la bibliothèque</InkLink>
+        <InkLink Href="/#library" Class="ink-btn ink-btn--ghost mt-4">Retour</InkLink>
     </div>
 }
 else
 {
-    <div class="mb-6 pb-3">
-        <InkLink Href="/" Class="ink-btn ink-btn--ghost gpu text-xs">
+    <!-- Top bar -->
+    <div class="bookdetail__topbar">
+        <InkLink Href="/#library" Class="ink-btn ink-btn--ghost gpu text-xs">
             <span aria-hidden="true" class="ink-btn__glyph">←</span>
-            <span class="ink-btn__text">Retour à la bibliothèque</span>
+            <span class="ink-btn__text">Bibliothèque</span>
         </InkLink>
-    </div>
 
-    <div class="open-book reveal is-in section-opt">
-        <div class="book-shell">
-            <div class="book-spread gpu">
-            
-            <!-- ================= PAGE GAUCHE ================= -->
-            <div class="book-leaf book-left">
-                <div class="folio">
-                    <div class="folio__left">
-                        <div class="folio__stamp">
-                            <span class="stamp anim-stamp">@_book.StampLabel</span>
-                            <span class="ink-dim text-xs font-black uppercase tracking-wide">@_book.Slug</span>
-                        </div>
-
-                        <div class="folio__title">
-                            <h1 class="ink-title text-4xl leading-none">@_book.Title</h1>
-                            <p class="folio__subtitle">@_book.DescriptionTitle</p>
-                        </div>
-
-                        <div class="folio__meta">
-                            <div class="folio-card">
-                                <div class="folio-card__label">Rôle</div>
-                                <div class="folio-card__value">@_book.Role</div>
-                            </div>
-                            <div class="folio-card">
-                                <div class="folio-card__label">Contexte</div>
-                                <div class="folio-card__value">@_book.Context</div>
-                            </div>
-                            <div class="folio-card">
-                                <div class="folio-card__label">Année</div>
-                                <div class="folio-card__value">@_book.Year</div>
-                            </div>
-                            <div class="folio-card">
-                                <div class="folio-card__label">Durée</div>
-                                <div class="folio-card__value">@_book.Duration</div>
-                            </div>
-                        </div>
-
-                        <div class="folio__stack">
-                            <div class="folio-section-head">
-                                <div class="ink-title text-lg">Stack</div>
-                                <div class="ink-dim text-xs font-black uppercase tracking-wide">Usage</div>
-                            </div>
-                            <div class="folio-stack-grid">
-                                @foreach (var item in _book.Stack)
-                                {
-                                    <div class="folio-stack-card">
-                                        <div class="folio-stack-head">
-                                            <img src="@item.IconSrc" class="folio-stack-icon" alt="@item.Name" />
-                                            <div class="folio-stack-name">@item.Name</div>
-                                        </div>
-                                        <div class="folio-stack-note tech-context">@item.UsedFor</div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RELIURE CENTRALE -->
-            <div class="book-gutter"></div>
-
-            <!-- ================= PAGE DROITE ================= -->
-            <div class="book-leaf book-right">
-                
-                @if (_book.KeyMetrics.Count > 0)
-                {
-                    <div class="absolute top-0 right-0 p-6 pointer-events-none hidden md:block">
-                        @foreach (var (metric, index) in _book.KeyMetrics.Select((m, i) => (m, i)))
-                        {
-                            <div class="post-it" style="@($"top: {10 + (index * 90)}px; right: {20 + (index % 2 * 10)}px; transform: rotate({(index % 2 == 0 ? -2 : 3)}deg);")">
-                                @metric
-                            </div>
-                        }
-                    </div>
-                }
-
-                <div class="folio folio--right">
-                    <div class="folio__narration">
-                        <div class="folio-section-head">
-                            <div class="ink-title text-lg">Narration</div>
-                            <div class="ink-dim text-xs font-black uppercase tracking-wide">histoire</div>
-                        </div>
-                        <div class="folio-body">
-                            @((MarkupString)_book.NarrationHtml)
-                        </div>
-                        <div class="folio-section-head mt-2">
-                            <div class="ink-title text-lg">Contribution</div>
-                            <div class="ink-dim text-xs font-black uppercase tracking-wide">rôle & livrables</div>
-                        </div>
-                        @if (_book.Contributions.Count == 0)
-                        {
-                            <div class="ink-dim text-sm font-bold">Contributions à venir.</div>
-                        }
-                        else
-                        {
-                            <ul class="folio-bullets">
-                                @foreach (var bullet in _book.Contributions)
-                                {
-                                    <li>@bullet</li>
-                                }
-                            </ul>
-                        }
-                    </div>
-
-                    <div class="folio__actions">
-                        <div class="folio-section-head">
-                            <div class="ink-title text-lg">Explorer</div>
-                            <div class="ink-dim text-xs font-black uppercase tracking-wide">liens</div>
-                        </div>
-                        <div class="flex flex-wrap gap-3">
-                            @if (!string.IsNullOrEmpty(_book.DemoLink))
-                            {
-                                <a href="@_book.DemoLink" target="_blank" class="ink-btn ink-btn--solid gpu text-xs">
-                                    <span class="ink-btn__text">Voir le site</span>
-                                    <span aria-hidden="true" class="ink-btn__glyph">→</span>
-                                </a>
-                            }
-                            
-                            @if (!string.IsNullOrEmpty(_book.SourceCodeLink))
-                            {
-                                <a href="@_book.SourceCodeLink" target="_blank" class="ink-btn ink-btn--ghost gpu text-xs">
-                                    <span class="ink-btn__text">Code Source</span>
-                                    <span aria-hidden="true" class="ink-btn__glyph"><i class="fa-brands fa-github"></i></span>
-                                </a>
-                            }
-                        </div>
-                    </div>
-
-                    <!-- Navigation Suivant / Précédent -->
-                    <div class="book-nav">
-                        @if (_prev != null)
-                        {
-                            <a href="/library/@_prev.Slug" class="book-nav__link">
-                                <span class="ink-btn__glyph">←</span>
-                                <div>
-                                    <span class="book-nav__label">Précédent</span>
-                                    @_prev.Title
-                                </div>
-                            </a>
-                        }
-                        else
-                        {
-                            <div></div>
-                        }
-
-                        @if (_next != null)
-                        {
-                            <a href="/library/@_next.Slug" class="book-nav__link text-right">
-                                <div>
-                                    <span class="book-nav__label">Suivant</span>
-                                    @_next.Title
-                                </div>
-                                <span class="ink-btn__glyph">→</span>
-                            </a>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            </div>
+        <div class="bookdetail__topbar-right">
+            @if (!string.IsNullOrEmpty(_book.DemoLink))
+            {
+                <a href="@_book.DemoLink" target="_blank" class="ink-btn ink-btn--solid gpu text-xs">
+                    <span class="ink-btn__text">Voir le site</span>
+                    <span aria-hidden="true" class="ink-btn__glyph">→</span>
+                </a>
+            }
+            @if (!string.IsNullOrEmpty(_book.SourceCodeLink))
+            {
+                <a href="@_book.SourceCodeLink" target="_blank" class="ink-btn ink-btn--ghost gpu text-xs">
+                    <span class="ink-btn__text">Code Source</span>
+                    <span aria-hidden="true" class="ink-btn__glyph"><i class="fa-brands fa-github"></i></span>
+                </a>
+            }
         </div>
     </div>
 
-    @if (!string.IsNullOrEmpty(_book.Live2d)) 
+    <!-- Hero du projet -->
+    <section class="bookdetail__hero reveal is-in section-opt manga-panel halftone gpu">
+        <div class="bookdetail__hero-inner">
+            <div class="bookdetail__hero-left">
+                <div class="bookdetail__hero-meta">
+                    <span class="stamp anim-stamp">@_book.StampLabel</span>
+                    <span class="ink-dim text-xs font-black uppercase tracking-wide">@_book.Year • @_book.Duration</span>
+                </div>
+                <h1 class="ink-title bookdetail__hero-title">@_book.Title</h1>
+                <p class="bookdetail__hero-subtitle">@_book.DescriptionTitle</p>
+            </div>
+
+            @if (_book.KeyMetrics.Count > 0)
+            {
+                <div class="bookdetail__hero-metrics">
+                    @foreach (var metric in _book.KeyMetrics)
+                    {
+                        <div class="bookdetail__metric">
+                            <span class="bookdetail__metric-text">@metric</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Meta cards -->
+        <div class="bookdetail__meta-row">
+            <div class="bookdetail__meta-card">
+                <div class="bookdetail__meta-label">Role</div>
+                <div class="bookdetail__meta-value">@_book.Role</div>
+            </div>
+            <div class="bookdetail__meta-card">
+                <div class="bookdetail__meta-label">Contexte</div>
+                <div class="bookdetail__meta-value">@_book.Context</div>
+            </div>
+            <div class="bookdetail__meta-card">
+                <div class="bookdetail__meta-label">Annee</div>
+                <div class="bookdetail__meta-value">@_book.Year</div>
+            </div>
+            <div class="bookdetail__meta-card">
+                <div class="bookdetail__meta-label">Duree</div>
+                <div class="bookdetail__meta-value">@_book.Duration</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenu principal en deux colonnes -->
+    <div class="bookdetail__content mt-4">
+        <!-- Colonne gauche : Narration + Contributions -->
+        <div class="bookdetail__main">
+            <div class="manga-frame hatch gpu bookdetail__section">
+                <div class="folio-section-head">
+                    <div class="ink-title text-lg">Narration</div>
+                    <div class="ink-dim text-xs font-black uppercase tracking-wide">histoire</div>
+                </div>
+                <div class="folio-body mt-3">
+                    @((MarkupString)_book.NarrationHtml)
+                </div>
+            </div>
+
+            <div class="manga-frame hatch gpu bookdetail__section mt-4">
+                <div class="folio-section-head">
+                    <div class="ink-title text-lg">Contributions</div>
+                    <div class="ink-dim text-xs font-black uppercase tracking-wide">role & livrables</div>
+                </div>
+                @if (_book.Contributions.Count == 0)
+                {
+                    <div class="ink-dim text-sm font-bold mt-3">Contributions a venir.</div>
+                }
+                else
+                {
+                    <ul class="folio-bullets mt-3">
+                        @foreach (var bullet in _book.Contributions)
+                        {
+                            <li>@bullet</li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+
+        <!-- Colonne droite : Stack technique -->
+        <div class="bookdetail__sidebar">
+            <div class="manga-frame hatch gpu bookdetail__section">
+                <div class="folio-section-head">
+                    <div class="ink-title text-lg">Stack</div>
+                    <div class="ink-dim text-xs font-black uppercase tracking-wide">technique</div>
+                </div>
+                <div class="bookdetail__stack-list mt-3">
+                    @foreach (var item in _book.Stack)
+                    {
+                        <div class="bookdetail__stack-item">
+                            <div class="bookdetail__stack-icon-wrap">
+                                <img src="@item.IconSrc" class="bookdetail__stack-icon" alt="@item.Name" />
+                            </div>
+                            <div>
+                                <div class="bookdetail__stack-name">@item.Name</div>
+                                <div class="bookdetail__stack-usage">@item.UsedFor</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(_book.DemoLink) || !string.IsNullOrEmpty(_book.SourceCodeLink))
+            {
+                <div class="manga-frame gpu bookdetail__section mt-4">
+                    <div class="folio-section-head">
+                        <div class="ink-title text-lg">Explorer</div>
+                        <div class="ink-dim text-xs font-black uppercase tracking-wide">liens</div>
+                    </div>
+                    <div class="bookdetail__links mt-3">
+                        @if (!string.IsNullOrEmpty(_book.DemoLink))
+                        {
+                            <a href="@_book.DemoLink" target="_blank" class="ink-btn ink-btn--solid gpu text-xs">
+                                <span class="ink-btn__text">Voir le site</span>
+                                <span aria-hidden="true" class="ink-btn__glyph">→</span>
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(_book.SourceCodeLink))
+                        {
+                            <a href="@_book.SourceCodeLink" target="_blank" class="ink-btn ink-btn--ghost gpu text-xs">
+                                <span class="ink-btn__text">Code Source</span>
+                                <span aria-hidden="true" class="ink-btn__glyph"><i class="fa-brands fa-github"></i></span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Navigation Suivant / Precedent -->
+    <div class="book-nav mt-6">
+        @if (_prev != null)
+        {
+            <InkLink Href="@($"/library/{_prev.Slug}")" Class="book-nav__link">
+                <span class="ink-btn__glyph">←</span>
+                <div>
+                    <span class="book-nav__label">Precedent</span>
+                    @_prev.Title
+                </div>
+            </InkLink>
+        }
+        else
+        {
+            <div></div>
+        }
+
+        @if (_next != null)
+        {
+            <InkLink Href="@($"/library/{_next.Slug}")" Class="book-nav__link text-right">
+                <div>
+                    <span class="book-nav__label">Suivant</span>
+                    @_next.Title
+                </div>
+                <span class="ink-btn__glyph">→</span>
+            </InkLink>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(_book.Live2d))
     {
         <Live2DDisplay Source="@_book.Live2d"
                        Scale="0.15"

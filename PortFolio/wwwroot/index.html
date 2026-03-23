@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PortFolio</title>
+    <title>Isaac L. Lawson Attiogbe — Software Engineer | Portfolio</title>
+    <meta name="description" content="Portfolio d'Isaac Lawson Attiogbe, Software Engineer spécialisé en Backend & Architecture (.NET, Blazor, Laravel, Next.js). Basé à Québec, Canada." />
+    <meta name="author" content="Isaac L. Lawson Attiogbe" />
+    <meta name="keywords" content="Isaac Lawson Attiogbe, Software Engineer, Backend, .NET, Blazor, Laravel, Flutter, Next.js, Québec, Canada, Portfolio" />
+    <meta property="og:title" content="Isaac L. Lawson Attiogbe — Software Engineer" />
+    <meta property="og:description" content="Software Engineer spécialisé en Backend & Architecture. Applications en production sur Play Store et App Store. Lauréat DigiEduHack 2025." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_CA" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Isaac L. Lawson Attiogbe — Software Engineer" />
+    <meta name="twitter:description" content="Software Engineer spécialisé en Backend & Architecture. Applications en production sur Play Store et App Store." />
     <base href="/" />
     <link rel="icon" type="image/svg+xml" href="assets/blazor-original.svg" />
     <link rel="preload" id="webassembly" />
@@ -14,31 +24,159 @@
     <script type="importmap"></script>
     <link href="css/ink-paper.css" rel="stylesheet" />
     <link href="css/blazor.css" rel="stylesheet" />
-    <!--<link rel="stylesheet" href="_content/BootstrapBlazor.Live2DDisplay/live2d.bundle.css" />-->
     <link rel="stylesheet" href="_content/BootstrapBlazor/css/bootstrap.blazor.bundle.min.css" />
     <link href="_content/BootstrapBlazor.FontAwesome/css/font-awesome.min.css" rel="stylesheet">
-
+    <style>
+        /* Ink-themed loading screen */
+        #app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background:
+                radial-gradient(1200px 900px at 50% -20%, rgba(255,255,255,.55), transparent 60%),
+                radial-gradient(900px 650px at 18% 22%, rgba(0,0,0,.040), transparent 62%),
+                linear-gradient(180deg, #EFE7D8, #E6D9C3);
+            color: #0B0B0C;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Paper grain texture */
+        #app::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                repeating-linear-gradient(0deg, rgba(0,0,0,.014) 0px, rgba(0,0,0,.014) 1px, transparent 2px, transparent 7px),
+                repeating-linear-gradient(90deg, rgba(0,0,0,.010) 0px, rgba(0,0,0,.010) 1px, transparent 2px, transparent 9px);
+            opacity: .6;
+            mix-blend-mode: multiply;
+        }
+        .loading-wrap {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: loadFadeIn .6s ease both;
+        }
+        @keyframes loadFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .loading-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 2px solid #B21E1E;
+            color: #B21E1E;
+            background: rgba(178,30,30,.06);
+            font-weight: 800;
+            font-size: 11px;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            animation: stampPop .55s .3s ease both;
+        }
+        @keyframes stampPop {
+            0% { transform: scale(.92) rotate(-6deg); opacity: 0; }
+            60% { transform: scale(1.04) rotate(2deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .loading-title {
+            font-size: clamp(24px, 4vw, 42px);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+            text-shadow: 2px 2px 0 rgba(11,11,12,0.1);
+            line-height: 1;
+        }
+        .loading-subtitle {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: rgba(11,11,12,0.55);
+            margin-bottom: 32px;
+        }
+        /* Ink brush loader */
+        .loading-ink {
+            width: 120px;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(11,11,12,0.10);
+            position: relative;
+            overflow: hidden;
+        }
+        .loading-ink::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 40%;
+            border-radius: 999px;
+            background: #0B0B0C;
+            animation: inkSlide 1.4s ease-in-out infinite;
+        }
+        @keyframes inkSlide {
+            0%   { left: -40%; }
+            50%  { left: 100%; }
+            100% { left: -40%; }
+        }
+        .loading-progress {
+            display: none;
+        }
+        .loading-progress-text {
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 14px;
+            color: rgba(11,11,12,0.40);
+        }
+        .loading-progress-text::after {
+            content: var(--blazor-load-percentage-text, "Initialisation...");
+        }
+        /* Speed lines decoration */
+        .loading-lines {
+            position: absolute;
+            inset: -40%;
+            pointer-events: none;
+            background: repeating-linear-gradient(115deg, rgba(11,11,12,.04) 0px, rgba(11,11,12,.04) 2px, transparent 2px, transparent 18px);
+            opacity: .25;
+            transform: rotate(-8deg);
+            mix-blend-mode: multiply;
+        }
+    </style>
 </head>
 
 <body>
     <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
+        <div class="loading-lines" aria-hidden="true"></div>
+        <div class="loading-wrap">
+            <div class="loading-badge">Ink Portfolio</div>
+            <div class="loading-title">Isaac L. Lawson</div>
+            <div class="loading-subtitle">Software Engineer</div>
+            <div class="loading-ink" aria-label="Chargement"></div>
+            <svg class="loading-progress">
+                <circle r="40%" cx="50%" cy="50%" />
+                <circle r="40%" cx="50%" cy="50%" />
+            </svg>
+            <div class="loading-progress-text"></div>
+        </div>
     </div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="." class="reload">Reload</a>
-        <span class="dismiss">🗙</span>
+        <span class="dismiss">X</span>
     </div>
-    <!--<script src="_content/BootstrapBlazor.Live2DDisplay/pixi.min.js"></script>
-    <script src="_content/BootstrapBlazor.Live2DDisplay/live2dcubismcore.min.js"></script>
-    <script src="_content/BootstrapBlazor.Live2DDisplay/live2d.min.js"></script>
-    <script src="_content/BootstrapBlazor.Live2DDisplay/index.min.js"></script>
-    <script src="_content/BootstrapBlazor.Live2DDisplay/extra.min.js"></script>-->
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
     <script src="_content/BootstrapBlazor/js/bootstrap.blazor.bundle.min.js"></script>
 </body>

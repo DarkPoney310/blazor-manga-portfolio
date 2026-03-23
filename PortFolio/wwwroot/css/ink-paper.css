@@ -2167,6 +2167,33 @@ body {
         opacity: .95;
     }
 
+/* Label that appears on hover */
+.stack-chip__name {
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.85);
+    white-space: nowrap;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid rgba(11,11,12,.18);
+    border-radius: 6px;
+    padding: 2px 6px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,.10);
+}
+
+.stack-chip:hover .stack-chip__name {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
 .stack-icon {
     width: var(--stack-icon);
     height: var(--stack-icon);
@@ -2222,5 +2249,406 @@ body {
 
     .stack-seq--clone {
         display: none;
+    }
+}
+
+/* -------------------- 16) About section (Timeline + Skills) -------------------- */
+.about__header {
+    margin-bottom: 8px;
+}
+
+.about__profile {
+    position: relative;
+    padding: 22px 20px 18px;
+}
+
+.about__bio {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    font-weight: 600;
+    color: var(--ink-2);
+    margin: 0;
+}
+
+.about__bio strong {
+    color: var(--ink);
+    font-weight: 900;
+}
+
+/* Award / Distinction */
+.about__distinction {
+    display: flex;
+}
+
+.about__award {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1;
+    padding: 18px;
+}
+
+.about__award-icon {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 2px solid var(--seal);
+    background: rgba(178,30,30,.06);
+    color: var(--seal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+/* Timeline */
+.about__timeline-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(0,0,0,0.12);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+.about__timeline-track {
+    position: relative;
+    margin-top: 18px;
+    padding-left: 28px;
+}
+
+.about__timeline-track::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--ink), var(--ink-4));
+    border-radius: 999px;
+}
+
+.about__tl-item {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.about__tl-item:last-child {
+    margin-bottom: 0;
+}
+
+.about__tl-dot {
+    position: absolute;
+    left: -24px;
+    top: 16px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    z-index: 1;
+}
+
+.about__tl-item--edu .about__tl-dot {
+    border-color: var(--seal);
+    background: rgba(178,30,30,.12);
+}
+
+.about__tl-card {
+    padding: 14px 16px;
+}
+
+.about__tl-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.about__tl-list {
+    margin: 0;
+    padding-left: 16px;
+    display: grid;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-2);
+    line-height: 1.5;
+}
+
+.about__tl-list li {
+    margin: 0;
+}
+
+/* Skills grid */
+.about__skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.about__skill-card {
+    padding: 14px 16px;
+}
+
+.about__skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.about__skill-tag {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,.18);
+    background: rgba(255,255,255,.18);
+    padding: 5px 10px;
+    color: var(--ink-2);
+}
+
+@media (max-width: 600px) {
+    .about__skills-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about__award {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* -------------------- 17) Book Detail (new layout) -------------------- */
+.bookdetail__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+}
+
+.bookdetail__topbar-right {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Hero section */
+.bookdetail__hero {
+    scroll-margin-top: 22px;
+}
+
+.bookdetail__hero-inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 22px;
+    flex-wrap: wrap;
+}
+
+.bookdetail__hero-left {
+    flex: 1;
+    min-width: 0;
+}
+
+.bookdetail__hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.bookdetail__hero-title {
+    margin: 14px 0 0;
+    font-size: clamp(28px, 3.6vw, 52px);
+    line-height: 1.02;
+}
+
+.bookdetail__hero-subtitle {
+    margin: 10px 0 0;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-size: 14px;
+    max-width: 55ch;
+}
+
+/* Metric badges */
+.bookdetail__hero-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+.bookdetail__metric {
+    padding: 10px 14px;
+    background: #fef08a;
+    border: 2px solid rgba(0,0,0,.12);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,.10);
+    transform: rotate(-1deg);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #854d0e;
+    line-height: 1.3;
+    max-width: 160px;
+}
+
+.bookdetail__metric:nth-child(even) {
+    transform: rotate(1.5deg);
+}
+
+/* Meta row */
+.bookdetail__meta-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.bookdetail__meta-card {
+    padding: 12px 14px;
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    background: rgba(255,255,255,.45);
+    box-shadow: 4px 4px 0 rgba(11,11,12,.08);
+}
+
+.bookdetail__meta-label {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .10em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 4px;
+}
+
+.bookdetail__meta-value {
+    font-weight: 900;
+    color: var(--ink);
+    font-size: 14px;
+}
+
+/* Two-column content */
+.bookdetail__content {
+    display: grid;
+    grid-template-columns: 1.4fr 0.6fr;
+    gap: 18px;
+    align-items: start;
+}
+
+.bookdetail__main {
+    min-width: 0;
+}
+
+.bookdetail__sidebar {
+    min-width: 0;
+    position: sticky;
+    top: 20px;
+}
+
+.bookdetail__section {
+    padding: 18px;
+}
+
+/* Stack list (sidebar) */
+.bookdetail__stack-list {
+    display: grid;
+    gap: 10px;
+}
+
+.bookdetail__stack-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid rgba(11,11,12,.12);
+    border-radius: 12px;
+    background: rgba(255,255,255,.35);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.bookdetail__stack-item:hover {
+    transform: translate3d(0,-2px,0);
+    box-shadow: 0 8px 16px rgba(0,0,0,.08);
+}
+
+.bookdetail__stack-icon-wrap {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 2px solid rgba(11,11,12,.14);
+    background: rgba(255,255,255,.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookdetail__stack-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+.bookdetail__stack-name {
+    font-weight: 900;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--ink);
+}
+
+.bookdetail__stack-usage {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-3);
+    font-style: italic;
+    margin-top: 1px;
+}
+
+.bookdetail__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+@media (max-width: 900px) {
+    .bookdetail__content {
+        grid-template-columns: 1fr;
+    }
+
+    .bookdetail__sidebar {
+        position: static;
+    }
+
+    .bookdetail__meta-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 520px) {
+    .bookdetail__meta-row {
+        grid-template-columns: 1fr;
+    }
+
+    .bookdetail__hero-inner {
+        flex-direction: column;
+    }
+
+    .bookdetail__hero-metrics {
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 }

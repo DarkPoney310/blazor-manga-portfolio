@@ -375,6 +375,7 @@ public static class BookRepository
             Subtitle = "Application éducative de composition nutritionnelle",
             ShelfMeta = "NextJS • TypeScript • Education • Hackathon",
             AccentColor = "#FF6B6B",
+            Category = "demo",
             StampLabel = "HACK 25",
             WidthPx = 72,
             HeightPx = 240,
@@ -436,6 +437,7 @@ public static class BookRepository
             Subtitle = "Plateforme de gestion et réservation de salon",
             ShelfMeta = "NextJS • Prisma • Cloudinary • PostgreSQL",
             AccentColor = "#8B4513",
+            Category = "demo",
             StampLabel = "PROJ 25",
             WidthPx = 72,
             HeightPx = 240,
@@ -498,6 +500,7 @@ public static class BookRepository
             Subtitle = "Portfolio Interactif",
             ShelfMeta = "Blazor • Tailwind CSS",
             AccentColor = "#4A2A18",
+            Category = "demo",
             StampLabel = "DEMO",
             WidthPx = 62, HeightPx = 232,
             

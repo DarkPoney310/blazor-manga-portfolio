@@ -2,22 +2,27 @@
 @using PortFolio.components
 @inject IJSRuntime JS
 
-<PageTitle>Portfolio</PageTitle>
+<PageTitle>Isaac L. Lawson Attiogbe — Software Engineer</PageTitle>
 
 <SocialIconButtons />
 
 <HeroSection Title="ISAAC L. LAWSON ATTIOGBE"
              Subtitle="Software Engineer — Spécialisé en Backend & Architecture"
              Location="Québec, Canada"
-             Email="lawsomisaac89@gmail.com"
-             PrimaryHref="#library"
+             Email="lawsonisaac89@gmail.com"
+             PrimaryHref="#about"
              SecondaryHref="#contact" />
+
+<AboutSection Id="about" />
 
 <LibrarySection Id="library" />
 
 <ContactSection Id="contact"
-                Email="lawsomisaac89@gmail.com"
-                Location="Québec, Canada" />
+                Email="lawsonisaac89@gmail.com"
+                Phone="+1 (263) 880-4848"
+                Location="Québec, Canada"
+                GitHubUrl="https://github.com/DarkPoney310"
+                LinkedInUrl="https://www.linkedin.com/in/lat%C3%A9-isaac-lawson-attiogbe-606404232" />
 
 <Live2DDisplay Source="/live2d/bilibili-22/index.json"
                Scale="0.25"
@@ -26,30 +31,10 @@
                AddHitAreaFrames="false"
                XOffset="20"
                YOffset="20"
-               BackgroundAlpha="false"
-/>
-
-
-@*<MouseFollower Content="Hi"
-               Options="@FollowerOptions"
-               FollowerMode="MouseFollowerMode.Text"
-               >
-    <Live2DDisplay Source="/live2d/bilibili-22/index.json"
-                   Scale="0.18"
-                   IsDraggable="true"
-                   Position="LivePosition.BottomRight"
-                   AddHitAreaFrames="false"
-                   XOffset="15"
-                   YOffset="15"
-                   BackgroundAlpha="false"
-                   Style="z-index: -1"
-    />
-</MouseFollower>*@
+               BackgroundAlpha="false" />
 
 @code {
     private IJSObjectReference? _mod;
-    
-    private readonly MouseFollowerOptions FollowerOptions = new() { ClassName = "mf-cursor bb-cursor" };
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -58,7 +43,4 @@
         await _mod.InvokeVoidAsync("observeReveals");
         await _mod.InvokeVoidAsync("initStackMarquees");
     }
-
-
-
 }

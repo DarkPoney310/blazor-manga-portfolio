@@ -47,16 +47,13 @@
     {
         var allBooks = BookRepository.GetAll();
 
-        // On sépare en deux listes pour l'affichage (logique arbitraire basée sur le slug)
-        // Ceux qui commencent par "tome-" vont dans Projets, le reste dans Démos
-        
         _projects = allBooks
-            .Where(b => b.Slug.StartsWith("tome-"))
+            .Where(b => b.Category == "projet")
             .Select(MapToShelfItem)
             .ToList();
 
         _demos = allBooks
-            .Where(b => !b.Slug.StartsWith("tome-"))
+            .Where(b => b.Category == "demo")
             .Select(MapToShelfItem)
             .ToList();
     }

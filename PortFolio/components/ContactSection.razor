@@ -18,6 +18,14 @@
                     </div>
                 }
 
+                @if (!string.IsNullOrWhiteSpace(Phone))
+                {
+                    <div class="contact__line">
+                        <span class="stamp stamp--ink">TÉLÉPHONE</span>
+                        <a class="contact__value" href="tel:@Phone.Replace(" ", "")">@Phone</a>
+                    </div>
+                }
+
                 @if (!string.IsNullOrWhiteSpace(Location))
                 {
                     <div class="contact__line">
@@ -25,6 +33,11 @@
                         <span class="contact__value ink-dim">@Location</span>
                     </div>
                 }
+
+                <div class="contact__line">
+                    <span class="stamp stamp--ink">LANGUES</span>
+                    <span class="contact__value ink-dim">Français (avancé) • Anglais (intermédiaire)</span>
+                </div>
             </div>
 
             <div class="contact__actions">
@@ -83,6 +96,7 @@
 @code {
     [Parameter] public string Id { get; set; } = "contact";
     [Parameter] public string? Email { get; set; }
+    [Parameter] public string? Phone { get; set; }
     [Parameter] public string? Location { get; set; }
     [Parameter] public string? GitHubUrl { get; set; }
     [Parameter] public string? LinkedInUrl { get; set; }
