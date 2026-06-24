@@ -1,9 +1,4 @@
-﻿@using System.Net.Http
-@inject ToastService ToastService
-@inject DownloadService DownloadService
-@inject HttpClient Http
-
-<section class="reveal is-in section-opt pb-3">
+﻿<section class="reveal is-in section-opt pb-3">
     <div class="hero manga-panel halftone gpu">
         <div class="hero__grid">
 
@@ -54,10 +49,10 @@
 
                     @if (!string.IsNullOrWhiteSpace(CvUrl))
                     {
-                        <Button IsAsync="true"
-                                Icon="fa-solid fa-download"
-                                Text="@CvButtonText"
-                                OnClickWithoutRender="DownloadCvAsync" />
+                        <a class="ink-btn ink-btn--ghost gpu" href="@CvUrl" download="@CvFileName">
+                            <span class="ink-btn__text">@CvButtonText</span>
+                            <span aria-hidden="true" class="ink-btn__glyph">⤓</span>
+                        </a>
                     }
                 </div>
 
@@ -162,17 +157,17 @@
     // CV
     [Parameter] public string? CvUrl { get; set; } = "/cv/cv-dev.pdf"; // mettez votre PDF dans wwwroot/cv/
     [Parameter] public string CvFileName { get; set; } = "Isaac-Lawson-CV.pdf";
-    [Parameter] public string CvButtonText { get; set; } = "Download CV";
+    [Parameter] public string CvButtonText { get; set; } = "Télécharger mon CV";
 
     // Status badge (optionnel)
-    [Parameter] public string? StatusText { get; set; } = "Open to Work";
+    [Parameter] public string? StatusText { get; set; } = "Disponible";
     [Parameter] public bool StatusIsAccent { get; set; } = true;
 
     // Stacks (images)
     public sealed record StackItem(string Name, string ImageUrl);
 
     [Parameter] public string StacksTitle { get; set; } = "Stacks";
-    [Parameter] public string? StacksSubtitle { get; set; } = "Les technos ";
+    [Parameter] public string? StacksSubtitle { get; set; } = "Mes technologies du quotidien";
 
     [Parameter]
     public List<StackItem>? StackItems { get; set; } = new()
@@ -208,32 +203,4 @@
 
     // Optionnel: badges texte sous le Hero
     [Parameter] public List<string>? StacksText { get; set; }
-
-    // ----------- C# download (WASM-friendly) -----------
-    private string ResolveCvUrl()
-    {
-        if (string.IsNullOrWhiteSpace(CvUrl))
-            return "/cv/cv-dev.pdf";
-
-        // accepte "/cv/xxx.pdf" ou "cv/xxx.pdf" ou URL absolue
-        if (CvUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
-            CvUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-            return CvUrl;
-
-        return CvUrl.StartsWith("/") ? CvUrl : "/" + CvUrl;
-    }
-
-    private async Task DownloadCvAsync()
-    {
-        try
-        {
-            var url = ResolveCvUrl();
-            await using var stream = await Http.GetStreamAsync(url);
-            await DownloadService.DownloadFromStreamAsync(CvFileName, stream);
-        }
-        catch (Exception)
-        {
-            //await ToastService.Error("Erreur", ex.Message);
-        }
-    }
 }

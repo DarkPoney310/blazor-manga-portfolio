@@ -1,5 +1,23 @@
 ﻿@page "/not-found"
 @layout MainLayout
+@using PortFolio.components
 
-<h3>Not Found</h3>
-<p>Sorry, the content you are looking for does not exist.</p>
+<PageTitle>404 — Page introuvable</PageTitle>
+
+<section class="reveal is-in section-opt manga-panel halftone gpu" style="text-align:center; padding: clamp(48px, 9vw, 110px) 24px;">
+    <span class="stamp anim-stamp">404</span>
+    <h1 class="ink-title text-3xl mt-2">Page introuvable</h1>
+    <p class="ink-muted mt-2" style="max-width: 46ch; margin-left:auto; margin-right:auto;">
+        Ce tome n'est pas sur l'étagère — le lien est peut-être périmé.
+    </p>
+    <div class="mt-4" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+        <InkLink Href="/" Class="ink-btn ink-btn--solid gpu">
+            <span class="ink-btn__text">Retour à l'accueil</span>
+            <span aria-hidden="true" class="ink-btn__glyph">←</span>
+        </InkLink>
+        <InkLink Href="/#library" Class="ink-btn ink-btn--ghost gpu">
+            <span class="ink-btn__text">Voir la bibliothèque</span>
+            <span aria-hidden="true" class="ink-btn__glyph">✦</span>
+        </InkLink>
+    </div>
+</section>

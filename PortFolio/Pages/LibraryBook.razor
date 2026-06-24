@@ -34,7 +34,7 @@ else
             {
                 <a href="@_book.SourceCodeLink" target="_blank" class="ink-btn ink-btn--ghost gpu text-xs">
                     <span class="ink-btn__text">Code Source</span>
-                    <span aria-hidden="true" class="ink-btn__glyph"><i class="fa-brands fa-github"></i></span>
+                    <span aria-hidden="true" class="ink-btn__glyph">↗</span>
                 </a>
             }
         </div>
@@ -68,7 +68,7 @@ else
         <!-- Meta cards -->
         <div class="bookdetail__meta-row">
             <div class="bookdetail__meta-card">
-                <div class="bookdetail__meta-label">Role</div>
+                <div class="bookdetail__meta-label">Rôle</div>
                 <div class="bookdetail__meta-value">@_book.Role</div>
             </div>
             <div class="bookdetail__meta-card">
@@ -76,11 +76,11 @@ else
                 <div class="bookdetail__meta-value">@_book.Context</div>
             </div>
             <div class="bookdetail__meta-card">
-                <div class="bookdetail__meta-label">Annee</div>
+                <div class="bookdetail__meta-label">Année</div>
                 <div class="bookdetail__meta-value">@_book.Year</div>
             </div>
             <div class="bookdetail__meta-card">
-                <div class="bookdetail__meta-label">Duree</div>
+                <div class="bookdetail__meta-label">Durée</div>
                 <div class="bookdetail__meta-value">@_book.Duration</div>
             </div>
         </div>
@@ -103,11 +103,11 @@ else
             <div class="manga-frame hatch gpu bookdetail__section mt-4">
                 <div class="folio-section-head">
                     <div class="ink-title text-lg">Contributions</div>
-                    <div class="ink-dim text-xs font-black uppercase tracking-wide">role & livrables</div>
+                    <div class="ink-dim text-xs font-black uppercase tracking-wide">rôle & livrables</div>
                 </div>
                 @if (_book.Contributions.Count == 0)
                 {
-                    <div class="ink-dim text-sm font-bold mt-3">Contributions a venir.</div>
+                    <div class="ink-dim text-sm font-bold mt-3">Contributions à venir.</div>
                 }
                 else
                 {
@@ -163,7 +163,7 @@ else
                         {
                             <a href="@_book.SourceCodeLink" target="_blank" class="ink-btn ink-btn--ghost gpu text-xs">
                                 <span class="ink-btn__text">Code Source</span>
-                                <span aria-hidden="true" class="ink-btn__glyph"><i class="fa-brands fa-github"></i></span>
+                                <span aria-hidden="true" class="ink-btn__glyph">↗</span>
                             </a>
                         }
                     </div>
@@ -179,7 +179,7 @@ else
             <InkLink Href="@($"/library/{_prev.Slug}")" Class="book-nav__link">
                 <span class="ink-btn__glyph">←</span>
                 <div>
-                    <span class="book-nav__label">Precedent</span>
+                    <span class="book-nav__label">Précédent</span>
                     @_prev.Title
                 </div>
             </InkLink>
@@ -201,17 +201,6 @@ else
         }
     </div>
 
-    @if (!string.IsNullOrEmpty(_book.Live2d))
-    {
-        <Live2DDisplay Source="@_book.Live2d"
-                       Scale="0.15"
-                       IsDraggable="true"
-                       Position="LivePosition.BottomLeft"
-                       AddHitAreaFrames="false"
-                       XOffset="10"
-                       YOffset="10"
-                       BackgroundAlpha="false" />
-    }
 }
 
 @code {

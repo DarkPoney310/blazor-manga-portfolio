@@ -31,11 +31,6 @@ public class BookData
     public string DescriptionTitle { get; set; } = "Détail de mission";
     public string NarrationHtml { get; set; } = "<p>Description à venir...</p>";
 
-    public string Sfx { get; set; } = "KRAK"; // Le bruitage Manga
-
-    //Live2d
-    public string? Live2d { get; set; }
-
 // Liens
     public string? DemoLink { get; set; }
     public string? SourceCodeLink { get; set; }

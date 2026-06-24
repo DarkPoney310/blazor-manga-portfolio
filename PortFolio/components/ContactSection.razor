@@ -1,7 +1,7 @@
 ﻿<section id="@Id" class="reveal section-opt manga-panel halftone gpu contact">
     <div class="ink-title contact__title brush-underline">Me contacter</div>
     <p class="ink-muted contact__lead">
-        Un projet, une idée, ou juste envie de discuter ? Écris-moi.
+        Un projet, une idée, ou simplement envie d'échanger ? Écrivez-moi.
     </p>
 
     <div class="contact__grid">
@@ -36,7 +36,7 @@
 
                 <div class="contact__line">
                     <span class="stamp stamp--ink">LANGUES</span>
-                    <span class="contact__value ink-dim">Français (avancé) • Anglais (intermédiaire)</span>
+                    <span class="contact__value ink-dim">Français (courant) • Anglais (intermédiaire)</span>
                 </div>
             </div>
 
@@ -71,13 +71,13 @@
 
             <div class="contact__form">
                 <label class="contact__label" for="contact_name">Nom</label>
-                <input id="contact_name" class="contact__input" @bind="Name" @bind:event="oninput" placeholder="Ton nom" />
+                <input id="contact_name" class="contact__input" @bind="Name" @bind:event="oninput" placeholder="Votre nom" />
 
                 <label class="contact__label contact__label--spaced" for="contact_subject">Sujet</label>
                 <input id="contact_subject" class="contact__input" @bind="Subject" @bind:event="oninput" placeholder="Ex: Collaboration / Freelance" />
 
                 <label class="contact__label contact__label--spaced" for="contact_message">Message</label>
-                <textarea id="contact_message" class="contact__textarea" @bind="Message" @bind:event="oninput" rows="5" placeholder="Décris ton besoin…"></textarea>
+                <textarea id="contact_message" class="contact__textarea" @bind="Message" @bind:event="oninput" rows="5" placeholder="Décrivez votre besoin…"></textarea>
             </div>
 
             @if (!string.IsNullOrWhiteSpace(Email))
@@ -105,7 +105,7 @@
 
     [Parameter] public string EmailSubject { get; set; } = "Contact via Portfolio";
     [Parameter] public string EmailBody { get; set; } =
-        "Salut Isaac,\n\nJ’aimerais discuter de...\n\n—";
+        "Bonjour Isaac,\n\nJ’aimerais discuter de...\n\n—";
 
     private string Name { get; set; } = "";
     private string Subject { get; set; } = "";

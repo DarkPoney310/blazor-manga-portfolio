@@ -1,50 +1,16 @@
-﻿@inject NavigationManager Nav
-@inject IJSRuntime JS
+@* A plain internal anchor. Plain left-clicks are intercepted in JS (ink.js) to play
+   the wipe transition; Ctrl/Cmd/Shift/middle-clicks fall through to the browser so
+   "open in new tab" works as users expect. See InkNavigator. *@
 
-<a href="@Href" class="@Class" @attributes="AdditionalAttributes" @onclick="Go" @onclick:preventDefault="true">
+<a href="@Href" class="@Class" data-inklink="true" @attributes="AdditionalAttributes">
     @ChildContent
 </a>
 
 @code {
-    private IJSObjectReference? _mod;
-
     [Parameter, EditorRequired] public string Href { get; set; } = "/";
     [Parameter] public string? Class { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
-
-    private async Task Go()
-    {
-        _mod ??= await JS.InvokeAsync<IJSObjectReference>("import", "./js/ink.js");
-        var ms = await _mod.InvokeAsync<int>("playInkWipe");
-
-        // In-page anchor only (e.g. #contact)
-        if (!string.IsNullOrWhiteSpace(Href) && Href.StartsWith("#", StringComparison.Ordinal))
-        {
-            var id = Href.TrimStart('#');
-            if (ms > 0) await Task.Delay(Math.Min(ms / 3, 220));
-            Nav.NavigateTo(Href);
-            await _mod.InvokeVoidAsync("scrollToId", id);
-            return;
-        }
-
-        // Path with fragment (e.g. /#library)
-        var fragmentIndex = Href?.IndexOf('#') ?? -1;
-        if (fragmentIndex > 0)
-        {
-            var path = Href![..fragmentIndex];
-            var fragment = Href[(fragmentIndex + 1)..];
-            if (ms > 0) await Task.Delay(ms);
-            Nav.NavigateTo(path);
-            // Wait for page to render before scrolling
-            await Task.Delay(120);
-            await _mod.InvokeVoidAsync("scrollToId", fragment);
-            return;
-        }
-
-        if (ms > 0) await Task.Delay(ms);
-        Nav.NavigateTo(Href ?? "/");
-    }
 }

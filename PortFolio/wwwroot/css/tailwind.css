@@ -1,3 +1,15 @@
-﻿@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind CSS v4 — utilities only.
+   Preflight (Tailwind's base reset) is intentionally NOT imported: the visual
+   design lives in ink-paper.css and is tuned against the browser defaults, so a
+   reset would shift spacing. We only want the handful of utility classes used in
+   the Razor markup (mt-*, text-*, font-*, …). */
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* Scan Blazor markup for the utility classes actually used.
+   Paths are resolved relative to this file (wwwroot/css/). */
+@source "../../App.razor";
+@source "../../Pages/**/*.razor";
+@source "../../components/**/*.razor";
+@source "../../Layout/**/*.razor";

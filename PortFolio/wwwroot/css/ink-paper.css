@@ -987,8 +987,13 @@ body {
     }
 
     .ink-wipe-overlay.is-active::before,
-    .anim-stamp {
+    .anim-stamp,
+    .stack-track {
         animation: none !important;
+    }
+
+    .social-icon-buttons__btn:hover {
+        transform: none !important;
     }
 }
 
@@ -1438,11 +1443,31 @@ body {
 /* -------------------- 13) Social icon buttons -------------------- */
 .social-icon-buttons {
     display: inline-flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.social-icon-buttons__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    transition: transform .18s ease, opacity .18s ease;
+}
+
+.social-icon-buttons__btn:hover {
+    transform: translateY(-2px);
+    opacity: .72;
 }
 
 .social-icon-buttons__icon {
-    font-size: 25px;
-    line-height: 1;
+    width: 25px;
+    height: 25px;
+    display: block;
 }
 
 /* -------------------- 14) Open Book (Manga Detail) -------------------- */

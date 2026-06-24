@@ -2,21 +2,21 @@
 @implements IDisposable
 @inject NavigationManager Nav
 @inject IJSRuntime JS
+@inject InkNavigator InkNav
 
-<BootstrapBlazorRoot>
-    <div id="inkWipe" class="ink-wipe-overlay"></div>
+<div id="inkWipe" class="ink-wipe-overlay"></div>
 
-    <div class="desk manga-theme">
-        <main class="desk__inner">
-            <div class="paper-page">
-                @Body
-            </div>
-        </main>
-    </div>
-</BootstrapBlazorRoot>
+<div class="desk manga-theme">
+    <main class="desk__inner">
+        <div class="paper-page">
+            @Body
+        </div>
+    </main>
+</div>
 
 @code {
     private IJSObjectReference? _mod;
+    private DotNetObjectReference<InkNavigator>? _inkRef;
     private bool _wired;
 
     protected override void OnInitialized()
@@ -30,6 +30,8 @@
     {
         if (!firstRender) return;
         _mod = await JS.InvokeAsync<IJSObjectReference>("import", "./js/ink.js");
+        _inkRef = DotNetObjectReference.Create(InkNav);
+        await _mod.InvokeVoidAsync("registerInkNavigator", _inkRef);
         await RefreshInkUiAsync();
     }
 
@@ -60,5 +62,6 @@
     public void Dispose()
     {
         Nav.LocationChanged -= OnLocationChanged;
+        _inkRef?.Dispose();
     }
 }

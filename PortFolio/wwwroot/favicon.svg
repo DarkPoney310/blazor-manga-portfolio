@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect x="3" y="3" width="58" height="58" rx="12" fill="#EFE7D8" stroke="#0B0B0C" stroke-width="5"/>
+  <text x="31" y="43" font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle" fill="#0B0B0C" letter-spacing="-1">IL</text>
+  <rect x="42" y="42" width="11" height="11" rx="2" fill="#B21E1E"/>
+</svg>

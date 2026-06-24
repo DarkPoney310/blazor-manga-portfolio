@@ -133,3 +133,39 @@ export function playInkWipe() {
 
     return duration;
 }
+
+// 3) Fullscreen toggle
+export function toggleFullscreen() {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        document.documentElement.requestFullscreen?.();
+    }
+}
+
+// 4) InkLink navigation
+// Capture-phase interception so the wipe plays on plain left-clicks, while
+// modified / non-primary clicks fall through to the browser (open in new tab).
+let _inkNavigator = null;
+let _inkClickWired = false;
+
+export function registerInkNavigator(dotNetRef) {
+    _inkNavigator = dotNetRef;
+    if (_inkClickWired) return;
+    _inkClickWired = true;
+    document.addEventListener("click", onInkLinkClick, true);
+}
+
+function onInkLinkClick(e) {
+    const link = e.target?.closest?.("a[data-inklink]");
+    if (!link) return;
+
+    // Let the browser handle modified or non-primary clicks natively.
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+    const href = link.getAttribute("href");
+    if (!href) return;
+
+    e.preventDefault();
+    _inkNavigator?.invokeMethodAsync("NavigateFromInk", href);
+}
