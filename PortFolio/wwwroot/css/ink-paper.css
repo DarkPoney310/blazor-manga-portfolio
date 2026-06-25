@@ -33,6 +33,9 @@
     --shadow-edge: inset 0 0 0 1px rgba(0,0,0,.10);
     /* Route transition duration */
     --wipe-ms: 560ms;
+    /* Easing — courbes douces pour des interactions plus fluides que le "ease" par défaut */
+    --ease: cubic-bezier(.2, .7, .2, 1);
+    --ease-out: cubic-bezier(.16, 1, .3, 1);
 }
 
 /* -------------------- 2) Anti-scrollbar phantom rules -------------------- */
@@ -72,14 +75,21 @@ body {
 }
 
 /* Perf helpers */
+/* Promotion d'une couche de composition pour des transforms nettes. On évite le
+   "will-change" permanent ici : appliqué à des dizaines d'éléments statiques il
+   gaspille la mémoire GPU et peut être ignoré par le navigateur. Le will-change
+   reste là où il sert vraiment (animations continues : marquee, reveals). */
 .gpu {
     transform: translate3d(0,0,0);
-    will-change: transform, opacity;
+    backface-visibility: hidden;
 }
 
+/* .section-opt conservé pour compat, mais sans content-visibility : avec une
+   estimation fixe (900px) les sections de hauteur réelle différente faisaient
+   "sauter" la scrollbar en rendant pendant le scroll. Bénéfice marginal sur un
+   portfolio de quelques sections, coût de fluidité réel — donc retiré. */
 .section-opt {
-    content-visibility: auto;
-    contain-intrinsic-size: 900px;
+    contain: layout style;
 }
 
 /* -------------------- 3) Wood desk background (15px border) -------------------- */
@@ -635,7 +645,7 @@ body {
     letter-spacing: .04em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+    transition: transform .2s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease);
     box-shadow: 0 16px 34px rgba(0,0,0,.12);
 }
 
@@ -901,7 +911,7 @@ body {
 .reveal {
     opacity: 0;
     transform: translate3d(0, 18px, 0);
-    transition: opacity .55s ease, transform .55s ease;
+    transition: opacity .55s var(--ease-out), transform .55s var(--ease-out);
     will-change: opacity, transform;
 }
 
@@ -1218,7 +1228,7 @@ body {
     height: var(--book-h);
     text-decoration: none;
     transform-origin: bottom center;
-    transition: transform .22s ease, filter .22s ease;
+    transition: transform .28s var(--ease-out), filter .28s var(--ease-out);
 }
 
 .library-book:hover,
@@ -1456,7 +1466,7 @@ body {
     background: none;
     color: inherit;
     cursor: pointer;
-    transition: transform .18s ease, opacity .18s ease;
+    transition: transform .2s var(--ease), opacity .2s var(--ease);
 }
 
 .social-icon-buttons__btn:hover {

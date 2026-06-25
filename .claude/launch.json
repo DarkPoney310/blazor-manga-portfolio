@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "portfolio",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "PortFolio/PortFolio.csproj", "-c", "Debug", "--urls", "http://localhost:5128"],
+      "autoPort": false,
+      "port": 5128
+    }
+  ]
+}

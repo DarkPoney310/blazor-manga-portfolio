@@ -163,14 +163,14 @@
     [Parameter] public string? StatusText { get; set; } = "Disponible";
     [Parameter] public bool StatusIsAccent { get; set; } = true;
 
-    // Stacks (images)
-    public sealed record StackItem(string Name, string ImageUrl);
+    // Stacks (images) — record propre au marquee du Hero, distinct de Models.StackItem.
+    public sealed record MarqueeItem(string Name, string ImageUrl);
 
     [Parameter] public string StacksTitle { get; set; } = "Stacks";
     [Parameter] public string? StacksSubtitle { get; set; } = "Mes technologies du quotidien";
 
     [Parameter]
-    public List<StackItem>? StackItems { get; set; } = new()
+    public List<MarqueeItem>? StackItems { get; set; } = new()
     {
         new("Visual Studio", "/assets/visualstudio-original.svg"),
         new("C#", "/assets/csharp-original.svg"),

@@ -1,4 +1,5 @@
 ﻿@using PortFolio.components
+@using PortFolio.Models
 
 <section class="reveal section-opt library-shelf manga-panel--soft gpu">
     <header class="library-shelf__header">
@@ -52,7 +53,20 @@
         string? Stamp = null,
         int WidthPx = 72,
         int HeightPx = 240
-    );
+    )
+    {
+        // Projection unique BookData -> BookItem (évite la duplication entre
+        // Library.razor et LibrarySection.razor).
+        public static BookItem From(BookData b) => new(
+            Title: b.Title,
+            Href: $"/library/{b.Slug}",
+            Meta: b.ShelfMeta,
+            Accent: b.AccentColor,
+            Stamp: b.StampLabel,
+            WidthPx: b.WidthPx,
+            HeightPx: b.HeightPx
+        );
+    }
 
     [Parameter] public string Title { get; set; } = "Bibliothèque";
     [Parameter] public string? Subtitle { get; set; }

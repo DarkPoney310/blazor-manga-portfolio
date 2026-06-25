@@ -45,29 +45,7 @@
 
     protected override void OnInitialized()
     {
-        var allBooks = BookRepository.GetAll();
-
-        _projects = allBooks
-            .Where(b => b.Category == "projet")
-            .Select(MapToShelfItem)
-            .ToList();
-
-        _demos = allBooks
-            .Where(b => b.Category == "demo")
-            .Select(MapToShelfItem)
-            .ToList();
-    }
-
-    private LibraryShelf.BookItem MapToShelfItem(BookData b)
-    {
-        return new LibraryShelf.BookItem(
-            Title: b.Title,
-            Href: $"/library/{b.Slug}",
-            Meta: b.ShelfMeta,
-            Accent: b.AccentColor,
-            Stamp: b.StampLabel,
-            WidthPx: b.WidthPx,
-            HeightPx: b.HeightPx
-        );
+        _projects = BookRepository.GetByCategory("projet").Select(LibraryShelf.BookItem.From).ToList();
+        _demos = BookRepository.GetByCategory("demo").Select(LibraryShelf.BookItem.From).ToList();
     }
 }

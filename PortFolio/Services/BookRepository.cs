@@ -10,6 +10,65 @@ public static class BookRepository
     private static readonly List<BookData> _books = new()
     {
         // ============================================
+        // MELOTOGO — plateforme streaming (MVP en prod)
+        // ============================================
+        new BookData
+        {
+            Slug = "melotogo",
+            Title = "MeloTogo",
+            Subtitle = "Plateforme de streaming musical",
+            ShelfMeta = ".NET 8 • PostgreSQL • Auto-hébergé",
+            AccentColor = "#4C2A85",
+            Category = "projet",
+            StampLabel = "MVP EN PROD",
+            WidthPx = 78,
+            HeightPx = 252,
+
+            Role = "Développeur full-stack (solo)",
+            Context = "Projet personnel",
+            Year = "2026",
+            Duration = "En cours",
+
+            DescriptionTitle = "Streaming musical auto-hébergé pour artistes togolais",
+            NarrationHtml = """
+                <p class="drop-cap"><strong>Contexte :</strong> offrir aux artistes togolais une plateforme de diffusion musicale moderne, conçue et déployée de bout en bout en solo jusqu'à la mise en production (MVP).</p>
+
+                <p><strong>Le cœur technique :</strong></p>
+                <ul>
+                    <li>Backend ASP.NET Core 8 (PostgreSQL), temps réel via SignalR, stockage objet S3 (MinIO / Cloudflare R2)</li>
+                    <li>Worker FFmpeg de transcodage <strong>auto-hébergé</strong>, développé pour ne dépendre d'aucun service externe</li>
+                    <li>Recherche musicale par <strong>similarité audio</strong> : embeddings CLAP-HTSAT exécutés via ONNX Runtime et indexés dans pgvector</li>
+                </ul>
+
+                <p><strong>Déploiement & exploitation en autonomie :</strong> VM Debian (Google Cloud), conteneurs Docker, CI/CD GitHub Actions, reverse proxy Caddy, DNS Cloudflare, frontend Next.js (BFF). Qualité assurée par tests unitaires et E2E (Playwright), health checks, journaux d'audit et domain events, supervision via .NET Aspire et Portainer.</p>
+                """,
+
+            DemoLink = "https://melotogo.com",
+            SourceCodeLink = null,
+
+            Stack = new()
+            {
+                new StackItem("ASP.NET Core 8", "/assets/dotnetcore-original.svg", "Backend & API"),
+                new StackItem("C#", "/assets/csharp-original.svg", "Langage principal"),
+                new StackItem("PostgreSQL", "/assets/postgresql-original.svg", "Données + pgvector"),
+                new StackItem("Docker", "/assets/docker-original.svg", "Conteneurisation & déploiement"),
+                new StackItem("Next.js", "/assets/nextjs-original.svg", "Frontend (BFF)"),
+            },
+
+            Contributions = new()
+            {
+                "Architecture et développement full-stack en solo, de l'API à la mise en production",
+                "Worker FFmpeg de transcodage auto-hébergé (zéro dépendance externe)",
+                "Recherche par similarité audio : CLAP-HTSAT + ONNX Runtime + pgvector",
+                "Temps réel via SignalR, stockage objet S3 (MinIO / Cloudflare R2)",
+                "CI/CD GitHub Actions, Docker, Caddy, Cloudflare sur VM Debian (GCP)",
+                "Tests unitaires & E2E (Playwright), health checks, domain events"
+            },
+
+            KeyMetrics = new() { "MVP en production", "Transcodage FFmpeg auto-hébergé", "Recherche par similarité (pgvector)" }
+        },
+
+        // ============================================
         // ÉQUI-ASSIETTE — 1er prix DigiEduHack 2025
         // ============================================
         new BookData
@@ -81,7 +140,7 @@ public static class BookRepository
             WidthPx = 72,
             HeightPx = 240,
 
-            Role = "Backend Engineer & architecte",
+            Role = "Développeur backend & architecture API",
             Context = "BH Consulting (freelance)",
             Year = "2025",
             Duration = "6 mois",
@@ -94,7 +153,7 @@ public static class BookRepository
 
                 <p><strong>Réalisations principales :</strong></p>
                 <ul>
-                    <li>Architecte principal de l'API REST en PHP Laravel</li>
+                    <li>Responsable de l'architecture de l'API REST en PHP Laravel</li>
                     <li>Architecture DDD + CQRS + SOLID + DRY appliquée</li>
                     <li>Domaine métier modélisé : clients, rendez-vous, services, paiements, commissions</li>
                     <li>Authentification et autorisation sécurisées</li>
@@ -145,7 +204,7 @@ public static class BookRepository
             WidthPx = 72,
             HeightPx = 240,
 
-            Role = "Backend Engineer & architecte",
+            Role = "Développeur backend & architecture API",
             Context = "BH Consulting (freelance)",
             Year = "2025",
             Duration = "En cours",
@@ -158,7 +217,7 @@ public static class BookRepository
 
                 <p><strong>Réalisations principales :</strong></p>
                 <ul>
-                    <li>Architecte principal de l'API REST en PHP Laravel</li>
+                    <li>Responsable de l'architecture de l'API REST en PHP Laravel</li>
                     <li>Architecture DDD + CQRS + SOLID + DRY</li>
                     <li>Domaine métier : utilisateurs, points de collecte, types de déchets</li>
                     <li>Système de gamification : badges, classements, score</li>
@@ -338,7 +397,7 @@ public static class BookRepository
             WidthPx = 62,
             HeightPx = 232,
 
-            Role = "Software Engineer",
+            Role = "Développeur Backend / Full-stack",
             Context = "Projet personnel",
             Year = "2025",
             Duration = "Continu",
@@ -373,20 +432,33 @@ public static class BookRepository
 
     public static IReadOnlyList<BookData> GetAll() => _books;
 
+    public static IReadOnlyList<BookData> GetByCategory(string category) =>
+        _books.Where(b => b.Category.Equals(category, StringComparison.OrdinalIgnoreCase)).ToList();
+
     public static BookData? GetBySlug(string slug) =>
         _books.FirstOrDefault(b => b.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
 
+    // Navigation suivant/précédent au sein de la même catégorie (évite de sauter
+    // d'un "projet" vers une "démo").
     public static BookData? GetNext(string slug)
     {
-        var index = _books.FindIndex(b => b.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
-        if (index == -1 || index == _books.Count - 1) return null;
-        return _books[index + 1];
+        var current = GetBySlug(slug);
+        if (current is null) return null;
+
+        var siblings = _books.Where(b => b.Category == current.Category).ToList();
+        var index = siblings.FindIndex(b => b.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
+        if (index == -1 || index == siblings.Count - 1) return null;
+        return siblings[index + 1];
     }
 
     public static BookData? GetPrevious(string slug)
     {
-        var index = _books.FindIndex(b => b.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
+        var current = GetBySlug(slug);
+        if (current is null) return null;
+
+        var siblings = _books.Where(b => b.Category == current.Category).ToList();
+        var index = siblings.FindIndex(b => b.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
         if (index <= 0) return null;
-        return _books[index - 1];
+        return siblings[index - 1];
     }
 }
