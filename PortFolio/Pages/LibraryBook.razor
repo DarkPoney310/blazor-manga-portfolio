@@ -15,7 +15,8 @@
 }
 else
 {
-    <!-- Top bar -->
+    <div class="book-table">
+    <!-- Top bar (sur la table, au-dessus du livre) -->
     <div class="bookdetail__topbar">
         <InkLink Href="/#library" Class="ink-btn ink-btn--ghost gpu text-xs">
             <span aria-hidden="true" class="ink-btn__glyph">←</span>
@@ -40,6 +41,8 @@ else
         </div>
     </div>
 
+    <!-- Le livre ouvert (pages vieillies + reliure + élévation) -->
+    <article class="open-spread">
     <!-- Hero du projet -->
     <section class="bookdetail__hero reveal is-in section-opt manga-panel halftone gpu">
         <div class="bookdetail__hero-inner">
@@ -172,7 +175,9 @@ else
         </div>
     </div>
 
-    <!-- Navigation Suivant / Precedent -->
+    </article>
+
+    <!-- Navigation Suivant / Precedent (sur la table, sous le livre) -->
     <div class="book-nav mt-6">
         @if (_prev != null)
         {
@@ -199,6 +204,7 @@ else
                 <span class="ink-btn__glyph">→</span>
             </InkLink>
         }
+    </div>
     </div>
 
 }

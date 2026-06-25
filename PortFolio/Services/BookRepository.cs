@@ -51,7 +51,9 @@ public static class BookRepository
                 new StackItem("ASP.NET Core 8", "/assets/dotnetcore-original.svg", "Backend & API"),
                 new StackItem("C#", "/assets/csharp-original.svg", "Langage principal"),
                 new StackItem("PostgreSQL", "/assets/postgresql-original.svg", "Données + pgvector"),
+                new StackItem("Redis", "/assets/redis-original.svg", "Cache & files"),
                 new StackItem("Docker", "/assets/docker-original.svg", "Conteneurisation & déploiement"),
+                new StackItem("Google Cloud", "/assets/googlecloud-original.svg", "VM Debian / hébergement"),
                 new StackItem("Next.js", "/assets/nextjs-original.svg", "Frontend (BFF)"),
             },
 
@@ -76,7 +78,7 @@ public static class BookRepository
             Slug = "equi-assiette",
             Title = "Équi-Assiette",
             Subtitle = "Application éducative de composition nutritionnelle",
-            ShelfMeta = "Next.js • TypeScript • 1er prix",
+            ShelfMeta = "Next.js • Gemini AI • 1er prix",
             AccentColor = "#C0392B",
             Category = "projet",
             StampLabel = "1ER PRIX",
@@ -88,17 +90,18 @@ public static class BookRepository
             Year = "2025",
             Duration = "Hackathon",
 
-            DescriptionTitle = "Laboratoire numérique pour l'éducation nutritionnelle",
+            DescriptionTitle = "« The Plate Architect » — coach nutritionnel éducatif et interactif",
             NarrationHtml = """
-                <p class="drop-cap"><strong>Contexte :</strong> l'analphabétisme nutritionnel est un moteur majeur de la crise de l'obésité et du diabète au Canada.</p>
+                <p class="drop-cap"><strong>Contexte :</strong> l'analphabétisme nutritionnel alimente la montée des maladies chroniques (obésité, diabète de type 2, hypertension). Défi « Digital Education for Health & Well-being » du DigiEduHack 2025.</p>
 
-                <p><strong>Solution :</strong> Équi-Assiette, une application web éducative qui transforme l'apprentissage passif en simulation active — développée en solo, primée 1er prix du challenge « The Food Challenge ».</p>
+                <p><strong>Solution :</strong> Équi-Assiette — « The Plate Architect » — transforme la composition d'un repas en jeu éducatif. Développé en solo, lauréat du 1er prix.</p>
 
-                <p><strong>Concept clé :</strong></p>
+                <p><strong>Le cœur du produit :</strong></p>
                 <ul>
-                    <li>L'utilisateur compose virtuellement ses repas</li>
-                    <li>Un moteur de règles fournit un feedback instantané</li>
-                    <li>Gamification : apprentissage par la pratique</li>
+                    <li><strong>Moteur de cohérence alimentaire</strong> (« Food Coherence Engine ») : des règles inspirées du Guide alimentaire canadien détectent les combinaisons déséquilibrées et guident vers des repas cohérents — bien plus qu'un compteur de calories</li>
+                    <li><strong>Coach IA (Gemini)</strong> : à partir du plat déjà composé par l'utilisateur, génère des repas complémentaires pour équilibrer l'ensemble de sa journée</li>
+                    <li><strong>Données &amp; sécurité (Open Food Facts)</strong> : recherche de produits, score NOVA et alertes en temps réel sur les produits rappelés</li>
+                    <li><strong>Gamification</strong> : assiette virtuelle en glisser-déposer, jauges d'équilibre, mascotte et feedback instantané (Framer Motion)</li>
                 </ul>
                 """,
 
@@ -110,19 +113,20 @@ public static class BookRepository
                 new StackItem("Next.js 14", "/assets/nextjs-original.svg", "Framework full-stack"),
                 new StackItem("TypeScript", "/assets/typescript-original.svg", "Langage"),
                 new StackItem("React", "/assets/react-original.svg", "Bibliothèque UI"),
+                new StackItem("Prisma", "/assets/prisma-original.svg", "ORM"),
             },
 
             Contributions = new()
             {
                 "Conception et développement full-stack en solo",
-                "Architecture du moteur de règles nutritionnel",
-                "Intégration de l'API Open Food Facts",
-                "Système de feedback gamifié",
-                "Animations avec Framer Motion",
-                "Design responsive web et mobile"
+                "Moteur de cohérence alimentaire (règles du Guide alimentaire canadien)",
+                "Intégration du coach IA Gemini (repas complémentaires sur la journée)",
+                "Intégration Open Food Facts : score NOVA + alertes produits rappelés",
+                "Gamification : assiette en glisser-déposer, jauges, feedback (Framer Motion)",
+                "Design responsive web & mobile"
             },
 
-            KeyMetrics = new() { "1er prix DigiEduHack", "En ligne sur Vercel", "Solo" }
+            KeyMetrics = new() { "1er prix DigiEduHack 2025", "Coach IA (Gemini)", "En ligne sur Vercel" }
         },
 
         // ============================================

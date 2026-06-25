@@ -4,40 +4,82 @@
 
 <section id="@Id" class="reveal section-opt mt-10 mb-6">
     <div class="manga-panel halftone gpu">
-        <div class="mb-8 pl-2">
-            <span class="stamp anim-stamp">Bibliothèque</span>
-            <h2 class="ink-title text-3xl mt-2">Mes livres</h2>
-            <p class="ink-muted mt-2 max-w-2xl">
-                Tous mes projets et expérimentations. Cliquez sur un tome pour l'ouvrir.
-            </p>
+        <div class="fprojects__head mb-6 pl-2">
+            <div>
+                <span class="stamp anim-stamp">Projets</span>
+                <h2 class="ink-title text-3xl mt-2">Projets phares</h2>
+                <p class="ink-muted mt-2 max-w-2xl">
+                    Du concept à la production. Cliquez sur une fiche pour ouvrir le tome détaillé.
+                </p>
+            </div>
+
+            <InkLink Href="/library" Class="ink-btn ink-btn--ghost gpu fprojects__all">
+                <span class="ink-btn__text">Toute la bibliothèque</span>
+                <span aria-hidden="true" class="ink-btn__glyph">→</span>
+            </InkLink>
         </div>
 
-        <LibraryShelf Title="Projets"
-                      Subtitle="Des applications solides, en mode tome."
-                      BadgeText="Shelf 01"
-                      Books="@_projects" />
+        <div class="fprojects__grid">
+            @foreach (var b in _projects)
+            {
+                <div class="fcard gpu" style="@($"--card-accent:{b.AccentColor};")">
+                    <InkLink Href="@($"/library/{b.Slug}")" Class="fcard__main" aria-label="@($"Ouvrir la fiche {b.Title}")">
+                        <div class="fcard__top">
+                            @if (!string.IsNullOrWhiteSpace(b.StampLabel))
+                            {
+                                <span class="fcard__stamp">@b.StampLabel</span>
+                            }
+                            <span class="fcard__meta ink-dim">@b.ShelfMeta</span>
+                        </div>
 
-        @if (_demos.Count > 0)
-        {
-            <div class="mt-8">
-                <LibraryShelf Title="Démos"
-                              Subtitle="Des idées rapides"
-                              BadgeText="Shelf 02"
-                              Books="@_demos" />
-            </div>
-        }
+                        <h3 class="ink-title fcard__title">@b.Title</h3>
+                        <p class="fcard__tagline">@b.Subtitle</p>
+
+                        @if (b.Stack.Count > 0)
+                        {
+                            <div class="fcard__stack">
+                                @foreach (var s in b.Stack.Take(4))
+                                {
+                                    <span class="fcard__chip">
+                                        <img src="@s.IconSrc" alt="@s.Name" class="fcard__chip-icon" loading="lazy" />
+                                        <span>@s.Name</span>
+                                    </span>
+                                }
+                            </div>
+                        }
+
+                        <span class="fcard__open">
+                            Ouvrir la fiche
+                            <span aria-hidden="true" class="ink-btn__glyph">→</span>
+                        </span>
+                    </InkLink>
+
+                    @if (!string.IsNullOrEmpty(b.DemoLink) || !string.IsNullOrEmpty(b.SourceCodeLink))
+                    {
+                        <div class="fcard__links">
+                            @if (!string.IsNullOrEmpty(b.DemoLink))
+                            {
+                                <a href="@b.DemoLink" target="_blank" rel="noopener noreferrer" class="fcard__link">Voir le site ↗</a>
+                            }
+                            @if (!string.IsNullOrEmpty(b.SourceCodeLink))
+                            {
+                                <a href="@b.SourceCodeLink" target="_blank" rel="noopener noreferrer" class="fcard__link">Code ↗</a>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
     </div>
 </section>
 
 @code {
     [Parameter] public string Id { get; set; } = "library";
 
-    private IReadOnlyList<LibraryShelf.BookItem> _projects = Array.Empty<LibraryShelf.BookItem>();
-    private IReadOnlyList<LibraryShelf.BookItem> _demos = Array.Empty<LibraryShelf.BookItem>();
+    private IReadOnlyList<BookData> _projects = Array.Empty<BookData>();
 
     protected override void OnInitialized()
     {
-        _projects = BookRepository.GetByCategory("projet").Select(LibraryShelf.BookItem.From).ToList();
-        _demos = BookRepository.GetByCategory("demo").Select(LibraryShelf.BookItem.From).ToList();
+        _projects = BookRepository.GetByCategory("projet");
     }
 }

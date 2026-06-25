@@ -8,15 +8,22 @@
 
 /* -------------------- 1) Tokens -------------------- */
 :root {
-    /* Paper */
-    --paper: #F6F1E7;
-    --paper-2: #EFE7D8;
-    --paper-3: #E6D9C3;
-    /* Ink */
-    --ink: #0B0B0C;
-    --ink-2: rgba(11, 11, 12, 0.78);
-    --ink-3: rgba(11, 11, 12, 0.55);
-    --ink-4: rgba(11, 11, 12, 0.18);
+    /* Paper — vieilli, façon manuscrit ancien */
+    --paper: #EFE5CC;
+    --paper-2: #E8DBBE;
+    --paper-3: #DECEA9;
+    /* Pages d'un vieux livre (page de détail) */
+    --paper-aged: #EAD9B4;
+    --paper-aged-2: #DFCB9F;
+    --paper-aged-edge: #C7B083;
+    /* Table sur laquelle on pose le livre (bois chaud, ni trop clair ni trop sombre) */
+    --table-1: #6B5239;
+    --table-2: #4F3A26;
+    /* Ink — encre sumi chaude (vieillie) plutôt que noir pur */
+    --ink: #1A130C;
+    --ink-2: rgba(26, 19, 12, 0.80);
+    --ink-3: rgba(26, 19, 12, 0.56);
+    --ink-4: rgba(26, 19, 12, 0.18);
     /* Accent stamp (optional) */
     --seal: #B21E1E;
     /* Desk (wood) */
@@ -52,8 +59,13 @@ html, body {
 
 body {
     color: var(--ink);
+    /* Police de base explicite (avant : aucune → fallback serif du navigateur) */
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 /* Optional wrapper */
@@ -93,8 +105,17 @@ body {
 }
 
 /* -------------------- 3) Wood desk background (15px border) -------------------- */
+/* #app hérite de "display:flex; align-items:center" de l'écran de chargement
+   (index.html) : ça rétrécit .desk à la largeur de son contenu au lieu de
+   remplir l'écran. On force l'étirement (sélecteur plus spécifique que #app
+   pour battre la règle inline). */
+body #app {
+    align-items: stretch;
+}
+
 .desk {
     min-height: 100vh;
+    width: 100%;
     padding: var(--desk-pad);
     position: relative;
     overflow: hidden;
@@ -263,8 +284,10 @@ body {
     text-transform: uppercase;
     letter-spacing: -0.02em;
     color: var(--ink);
-    /* Clean "pressed ink" shadow instead of glitch/blur */
-    text-shadow: 2px 2px 0 rgba(11,11,12,0.1); 
+    /* Encre pressée + très léger "bleed" chaud, comme l'encre absorbée par le papier */
+    text-shadow:
+        2px 2px 0 rgba(26,19,12,0.10),
+        0 0 1px rgba(26,19,12,0.30);
 }
 
 /* ... existing code ... */
@@ -645,8 +668,10 @@ body {
     letter-spacing: .04em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: transform .2s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease);
-    box-shadow: 0 16px 34px rgba(0,0,0,.12);
+    position: relative;
+    transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+    /* ombre dure "tampon imprimé" plutôt qu'une ombre floue générique */
+    box-shadow: 3px 3px 0 rgba(26,19,12,.22);
 }
 
 .ink-btn__text {
@@ -657,26 +682,35 @@ body {
 .ink-btn__glyph {
     font-size: 16px;
     line-height: 1;
+    transition: transform .2s var(--ease);
 }
 
 .ink-btn--solid {
-    background: var(--ink);
+    /* léger relief d'encre sur le fond plein */
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.08), transparent 40%),
+        var(--ink);
     color: var(--paper);
 }
 
 .ink-btn--ghost {
-    background: rgba(255,255,255,.32);
+    background: rgba(255,250,235,.40);
     color: var(--ink);
 }
 
 .ink-btn:hover {
-    transform: translate3d(0,-3px,0) rotate(-.4deg);
-    opacity: .97;
+    transform: translate3d(-1px,-3px,0) rotate(-.4deg);
+    box-shadow: 5px 8px 0 rgba(26,19,12,.20);
 }
 
+    /* le glyphe (flèche / signe) glisse à l'interaction */
+    .ink-btn:hover .ink-btn__glyph {
+        transform: translateX(3px);
+    }
+
 .ink-btn:active {
-    transform: translate3d(0,0,0);
-    opacity: 1;
+    transform: translate3d(2px,2px,0) rotate(0deg);
+    box-shadow: 1px 1px 0 rgba(26,19,12,.24);
 }
 
 /* Make BootstrapBlazor buttons blend with ink CTAs inside the hero */
@@ -1202,8 +1236,10 @@ body {
 .library-shelf__row {
     display: flex;
     align-items: flex-end;
-    gap: 10px;
-    width: max-content;
+    justify-content: center; /* livres centrés sur l'étagère (desktop) */
+    gap: clamp(10px, 2vw, 26px);
+    width: 100%;
+    min-width: max-content; /* garde la taille des spines + scroll horizontal sur mobile */
     padding: 8px 10px 18px;
 }
 
@@ -1454,29 +1490,39 @@ body {
 .social-icon-buttons {
     display: inline-flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
 }
 
+/* Mêmes codes que les boutons d'encre : cadre, fond papier, ombre "tampon" */
 .social-icon-buttons__btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 4px;
-    border: 0;
-    background: none;
-    color: inherit;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 3px solid var(--ink);
+    border-radius: 12px;
+    background: rgba(255, 250, 235, .40);
+    color: var(--ink);
     cursor: pointer;
-    transition: transform .2s var(--ease), opacity .2s var(--ease);
+    box-shadow: 3px 3px 0 rgba(26, 19, 12, .22);
+    transition: transform .2s var(--ease), box-shadow .2s var(--ease);
 }
 
 .social-icon-buttons__btn:hover {
-    transform: translateY(-2px);
-    opacity: .72;
+    transform: translate3d(-1px, -3px, 0) rotate(-.4deg);
+    box-shadow: 5px 8px 0 rgba(26, 19, 12, .20);
+}
+
+.social-icon-buttons__btn:active {
+    transform: translate3d(2px, 2px, 0);
+    box-shadow: 1px 1px 0 rgba(26, 19, 12, .24);
 }
 
 .social-icon-buttons__icon {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     display: block;
 }
 
@@ -1726,23 +1772,36 @@ body {
 }
 
 .folio-body {
-    font-size: 14px;
-    line-height: 1.6;
-    font-weight: 800;
+    font-size: 15px;
+    line-height: 1.7;
+    font-weight: 500;
+    color: var(--ink-2);
 }
 
 .folio-body p {
-    margin: 0 0 10px 0;
+    margin: 0 0 12px 0;
+    max-width: 66ch;
+}
+
+.folio-body strong {
+    font-weight: 800;
+    color: var(--ink);
+}
+
+/* Lecture façon vrai livre : serif chaud dans le tome ouvert */
+.open-spread .folio-body {
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
 }
 
 .folio-bullets {
     margin: 0;
     padding-left: 18px;
     display: grid;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--ink);
+    gap: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--ink-2);
 }
 
 .folio-bullets li {
@@ -2685,5 +2744,379 @@ body {
     .bookdetail__hero-metrics {
         flex-direction: row;
         flex-wrap: wrap;
+    }
+}
+
+/* ============================================================
+   16) LIVRE OUVERT SUR LA TABLE (page de détail)
+   - .paper-page devient une table dès qu'elle contient .book-table
+   - .open-spread = le livre ouvert : pages vieillies, reliure
+     centrale (gouttière + ombre), tranches, et élévation.
+============================================================ */
+
+/* La grande feuille devient une table en bois sur la fiche-livre */
+.paper-page:has(.book-table) {
+    background:
+        radial-gradient(1200px 800px at 50% 30%, rgba(255,255,255,.05), transparent 60%),
+        repeating-linear-gradient(90deg, rgba(0,0,0,.05) 0 2px, transparent 2px 22px),
+        linear-gradient(160deg, var(--table-1), var(--table-2));
+    padding: clamp(18px, 3vw, 48px);
+}
+
+    .paper-page:has(.book-table)::before {
+        /* veinage bois subtil au lieu des fibres de papier */
+        background:
+            repeating-linear-gradient(92deg, rgba(0,0,0,.06) 0 1px, transparent 1px 9px),
+            repeating-linear-gradient(88deg, rgba(255,255,255,.025) 0 1px, transparent 1px 14px);
+        opacity: .5;
+        mix-blend-mode: multiply;
+    }
+
+    .paper-page:has(.book-table)::after {
+        /* vignette : bords de table assombris */
+        background: radial-gradient(1300px 900px at 50% 45%, transparent 52%, rgba(0,0,0,.42) 100%);
+        opacity: .82;
+    }
+
+.book-table {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+    /* La barre du haut et la nav restent "sur la table", autour du livre */
+    .book-table > .bookdetail__topbar {
+        color: #F3E8D0;
+        border-bottom: 0;
+        margin-bottom: 16px;
+    }
+
+    .book-table > .book-nav {
+        border-top: 1px dashed rgba(243,232,208,.28);
+    }
+
+        .book-table > .book-nav .book-nav__link,
+        .book-table > .book-nav .book-nav__label {
+            color: #F3E8D0;
+        }
+
+/* Le livre ouvert posé sur la table */
+.open-spread {
+    position: relative;
+    border-radius: 6px;
+    padding: clamp(20px, 3vw, 40px) clamp(16px, 3vw, 44px);
+    background:
+        /* fibres de vieux papier */
+        repeating-linear-gradient(0deg, rgba(120,90,40,.05) 0 1px, transparent 1px 6px),
+        /* dégradé deux pages avec reliure assombrie au centre */
+        linear-gradient(90deg,
+            var(--paper-aged) 0%,
+            var(--paper-aged-2) 47%,
+            var(--paper-aged-edge) 50%,
+            var(--paper-aged-2) 53%,
+            var(--paper-aged) 100%);
+    /* élévation : le livre est nettement décollé de la table */
+    box-shadow:
+        0 1px 0 rgba(255,255,255,.42) inset,
+        0 3px 8px rgba(0,0,0,.34),
+        0 28px 54px rgba(0,0,0,.48),
+        0 70px 130px rgba(0,0,0,.58);
+}
+
+    /* Ombre de reliure (gouttière) au centre */
+    .open-spread::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 92px;
+        transform: translateX(-50%);
+        pointer-events: none;
+        z-index: 2;
+        background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(70,50,25,.06) 22%,
+            rgba(70,50,25,.34) 40%,
+            rgba(30,20,8,.70) 49%,
+            rgba(20,13,5,.78) 50%,
+            rgba(30,20,8,.70) 51%,
+            rgba(70,50,25,.34) 60%,
+            rgba(70,50,25,.06) 78%,
+            transparent 100%);
+        mix-blend-mode: multiply;
+    }
+
+    /* Épaisseur des pages sur les tranches gauche/droite */
+    .open-spread::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: 6px;
+        box-shadow:
+            inset 7px 0 0 -6px var(--paper-aged-edge),
+            inset 14px 0 0 -13px rgba(0,0,0,.12),
+            inset -7px 0 0 -6px var(--paper-aged-edge),
+            inset -14px 0 0 -13px rgba(0,0,0,.12);
+    }
+
+/* Dans le livre : fini l'allure "case de manga" (grosses bordures noires),
+   on retrouve une vraie page (encre sur papier, filets sépia fins). */
+.open-spread .manga-panel,
+.open-spread .manga-frame,
+.open-spread .bookdetail__hero {
+    border: 0;
+    background: transparent;
+    padding: 0;
+}
+
+.open-spread .bookdetail__hero {
+    margin-bottom: 10px;
+}
+
+.open-spread .halftone::before,
+.open-spread .hatch::before {
+    opacity: .12; /* trames très discrètes sur la page */
+}
+
+/* Sections internes : filets sépia façon séparateurs de chapitre */
+.open-spread .bookdetail__section {
+    border: 0;
+    border-top: 1px solid rgba(70,50,25,.22);
+    border-radius: 0;
+    padding: 18px 0 0;
+    margin-top: 18px;
+}
+
+.open-spread .folio-section-head {
+    border-bottom: 1px solid rgba(70,50,25,.18);
+    padding-bottom: 6px;
+}
+
+/* Cartes méta + stack : papier crème (pas blanc), filets sépia */
+.open-spread .bookdetail__meta-card,
+.open-spread .bookdetail__stack-item,
+.open-spread .bookdetail__stack-icon-wrap {
+    background: rgba(255,250,235,.55);
+    border-color: rgba(70,50,25,.30);
+    box-shadow: 2px 2px 0 rgba(70,50,25,.10);
+}
+
+/* Contenu aligné comme deux pages, autour de la reliure centrale */
+.open-spread .bookdetail__content {
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(28px, 5vw, 72px); /* la gouttière */
+}
+
+.open-spread .bookdetail__main {
+    padding-right: clamp(4px, 1vw, 14px);
+}
+
+.open-spread .bookdetail__sidebar {
+    padding-left: clamp(4px, 1vw, 14px);
+}
+
+/* Mobile : une seule page, pas de reliure, élévation réduite */
+@media (max-width: 900px) {
+    .open-spread {
+        background:
+            repeating-linear-gradient(0deg, rgba(120,90,40,.05) 0 1px, transparent 1px 6px),
+            linear-gradient(180deg, var(--paper-aged), var(--paper-aged-2));
+        box-shadow:
+            0 1px 0 rgba(255,255,255,.40) inset,
+            0 3px 8px rgba(0,0,0,.32),
+            0 22px 44px rgba(0,0,0,.46);
+    }
+
+        .open-spread::before {
+            display: none;
+        }
+
+    /* une seule "page" : on annule la grille deux-colonnes (sinon les colonnes
+       de 240px débordent sur mobile, ma règle .open-spread étant prioritaire) */
+    .open-spread .bookdetail__content {
+        grid-template-columns: 1fr;
+    }
+
+    .open-spread .bookdetail__main,
+    .open-spread .bookdetail__sidebar {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .paper-page:has(.book-table) {
+        padding: 14px;
+    }
+}
+
+/* ============================================================
+   17) PROJETS PHARES (grille de cartes, page d'accueil)
+   Scannable en quelques secondes : titre, accroche, stack, liens.
+============================================================ */
+.fprojects__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.fprojects__all {
+    flex: 0 0 auto;
+}
+
+.fprojects__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+}
+
+.fcard {
+    position: relative;
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    background: rgba(255, 250, 235, .42);
+    box-shadow: 4px 4px 0 rgba(26, 19, 12, .14);
+    overflow: hidden;
+    transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+
+    /* tranche d'accent (couleur du projet) à gauche */
+    .fcard::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        background: var(--card-accent, var(--ink));
+    }
+
+    .fcard:hover {
+        transform: translate3d(0, -4px, 0);
+        box-shadow: 7px 10px 0 rgba(26, 19, 12, .16);
+    }
+
+.fcard__main {
+    display: block;
+    text-decoration: none;
+    color: var(--ink);
+    padding: 16px 18px 14px 22px;
+}
+
+.fcard__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.fcard__stamp {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 2px solid var(--card-accent, var(--ink));
+    color: var(--card-accent, var(--ink));
+    background: rgba(255, 255, 255, .42);
+    white-space: nowrap;
+}
+
+.fcard__meta {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    text-align: right;
+}
+
+.fcard__title {
+    font-size: clamp(20px, 2.4vw, 26px);
+    margin: 12px 0 0;
+    line-height: 1.05;
+}
+
+.fcard__tagline {
+    margin: 6px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-2);
+    line-height: 1.4;
+}
+
+.fcard__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.fcard__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 9px;
+    border: 1px solid rgba(70, 50, 25, .28);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .45);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--ink-2);
+}
+
+.fcard__chip-icon {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+}
+
+.fcard__open {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--ink);
+}
+
+    .fcard__open .ink-btn__glyph {
+        transition: transform .2s var(--ease);
+    }
+
+.fcard:hover .fcard__open .ink-btn__glyph {
+    transform: translateX(3px);
+}
+
+.fcard__links {
+    display: flex;
+    gap: 16px;
+    padding: 0 18px 16px 22px;
+}
+
+.fcard__link {
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 2px solid var(--card-accent, var(--ink));
+    padding-bottom: 1px;
+    transition: color .2s var(--ease);
+}
+
+    .fcard__link:hover {
+        color: var(--ink);
+    }
+
+@media (max-width: 560px) {
+    .fprojects__grid {
+        grid-template-columns: 1fr;
     }
 }
