@@ -26,14 +26,14 @@ else
         <div class="bookdetail__topbar-right">
             @if (!string.IsNullOrEmpty(_book.DemoLink))
             {
-                <a href="@_book.DemoLink" target="_blank" class="ink-btn ink-btn--solid gpu text-xs">
+                <a href="@_book.DemoLink" target="_blank" rel="noopener noreferrer" class="ink-btn ink-btn--solid gpu text-xs">
                     <span class="ink-btn__text">Voir le site</span>
                     <span aria-hidden="true" class="ink-btn__glyph">→</span>
                 </a>
             }
             @if (!string.IsNullOrEmpty(_book.SourceCodeLink))
             {
-                <a href="@_book.SourceCodeLink" target="_blank" class="ink-btn ink-btn--ghost gpu text-xs">
+                <a href="@_book.SourceCodeLink" target="_blank" rel="noopener noreferrer" class="ink-btn ink-btn--ghost gpu text-xs">
                     <span class="ink-btn__text">Code Source</span>
                     <span aria-hidden="true" class="ink-btn__glyph">↗</span>
                 </a>
@@ -157,14 +157,14 @@ else
                     <div class="bookdetail__links mt-3">
                         @if (!string.IsNullOrEmpty(_book.DemoLink))
                         {
-                            <a href="@_book.DemoLink" target="_blank" class="ink-btn ink-btn--solid gpu text-xs">
+                            <a href="@_book.DemoLink" target="_blank" rel="noopener noreferrer" class="ink-btn ink-btn--solid gpu text-xs">
                                 <span class="ink-btn__text">Voir le site</span>
                                 <span aria-hidden="true" class="ink-btn__glyph">→</span>
                             </a>
                         }
                         @if (!string.IsNullOrEmpty(_book.SourceCodeLink))
                         {
-                            <a href="@_book.SourceCodeLink" target="_blank" class="ink-btn ink-btn--ghost gpu text-xs">
+                            <a href="@_book.SourceCodeLink" target="_blank" rel="noopener noreferrer" class="ink-btn ink-btn--ghost gpu text-xs">
                                 <span class="ink-btn__text">Code Source</span>
                                 <span aria-hidden="true" class="ink-btn__glyph">↗</span>
                             </a>

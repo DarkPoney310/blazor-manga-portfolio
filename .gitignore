@@ -365,3 +365,9 @@ FodyWeavers.xsd
 .dotnet_home/
 .nuget/
 **/http-cache/
+
+# JetBrains Rider / IntelliJ
+.idea/
+
+# Claude Code local config
+.claude/
